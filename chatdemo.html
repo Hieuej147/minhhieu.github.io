@@ -1,0 +1,266 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Chat Application</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <style>
+        .background-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            object-fit: cover;
+        }
+        .taskbar {
+            transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+        }
+        .taskbar-hidden {
+            transform: translateX(-100%);
+        }
+        /* Sidebar Styles */
+        .sidebar {
+            width: 64px;
+            height: calc(100vh - 64px); /* Adjust height to leave space for footer */
+            background: #c7cacd;
+            color: rgb(17, 16, 16);
+            overflow: hidden;
+            transition: width 0.3s ease-in-out;
+            position: fixed;
+            bottom: 64px; /* Adjust position to leave space for footer */
+        }
+
+        .sidebar:hover {
+            width: 200px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .sidebar ul li:hover {
+            background: #5d96ec;
+            transform: translateX(10px);
+        }
+
+        .sidebar ul li i {
+            font-size: 20px;
+            width: 30px;
+            text-align: center;
+        }
+
+        .sidebar ul li span {
+            margin-left: 10px;
+            display: none;
+            white-space: nowrap;
+        }
+
+        .sidebar:hover ul li span {
+            display: inline;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Background Image -->
+    <img src="https://storage.googleapis.com/a1aa/image/your-background-image.jpg" alt="Background Image" class="background-image"/>
+
+    <div class="flex flex-col min-h-screen">
+        <!-- Header -->
+        <header class="flex items-center justify-between bg-blue-200 p-4">
+            <div class="flex items-center">
+                <img alt="Logo" class="h-10 w-10" height="40" src="https://storage.googleapis.com/a1aa/image/-uBQkOcuVqVIJ0Op8ffqd2ATkwOvEFdVlxsZoBSPQIA.jpg" width="40"/>
+                <span class="ml-2 text-xl font-bold">DOCFLOW_NHT</span>
+            </div>
+            <div class="flex items-center">
+                <input class="p-2 rounded border border-gray-300" placeholder="GROUP..." type="text"/>
+                <button class="ml-2 p-2 bg-gray-300 rounded">
+                    <i class="fas fa-search"></i>
+                </button>
+                <nav class="ml-4">
+                    <a class="ml-4 text-lg" href="#">BOOKS</a>
+                    <a class="ml-4 text-lg" href="#">DOWNLOAD</a>
+                </nav>
+                <button class="ml-4 p-2">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <img alt="User Avatar" class="ml-4 h-10 w-10 rounded-full" height="40" src="https://storage.googleapis.com/a1aa/image/qmfxVq0HzVgg_-yZMybBovH3L7xPM9RqTs77BcM0J18.jpg" width="40"/>
+            </div>
+        </header>
+        <!-- Main Content -->
+        <div class="flex flex-1 overflow-hidden">
+            <!-- Taskbar -->
+            <aside class="w-16 bg-gray-200 p-4 border-r border-gray-300 flex flex-col items-center">
+                <a class="mb-4" href="#">
+                    <i class="fas fa-home text-xl"></i>
+                </a>
+                <a class="mb-4" href="#">
+                    <i class="fas fa-address-book text-xl"></i>
+                </a>
+                <a class="mb-4" href="#">
+                    <i class="fas fa-user-friends text-xl"></i>
+                </a>
+                <a class="mb-4" href="#">
+                    <i class="fas fa-store text-xl"></i>
+                </a>
+                <a class="mb-4" href="#">
+                    <i class="fas fa-users text-xl"></i>
+                </a>
+                <a class="mb-4" href="#">
+                    <i class="fas fa-comments text-xl"></i>
+                </a>
+                <a class="mb-4" href="#">
+                    <i class="fas fa-cog text-xl"></i>
+                </a>
+                <a class="mb-4" href="#">
+                    <i class="fas fa-sign-out-alt text-xl"></i>
+                </a>
+            </aside>
+            <!-- Sidebar -->
+            <aside class="w-1/5 bg-white p-4 border-r border-gray-300">
+                <div class="flex items-center mb-4">
+                    <img alt="User Avatar" class="h-10 w-10 rounded-full" height="40" src="https://storage.googleapis.com/a1aa/image/qmfxVq0HzVgg_-yZMybBovH3L7xPM9RqTs77BcM0J18.jpg" width="40"/>
+                    <div class="ml-2">
+                        <p class="font-bold">User: Nguyen</p>
+                        <p>VIETNAM, Phu Yen</p>
+                    </div>
+                </div>
+                <nav>
+                    <ul>
+                        <li class="mb-2">
+                            <a class="flex items-center p-2 hover:bg-gray-200 rounded" href="#">
+                                <i class="fas fa-home mr-2"></i>
+                                TẠO NHÓM
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a class="flex items-center p-2 hover:bg-gray-200 rounded" href="#">
+                                <i class="fas fa-address-book mr-2"></i>
+                                DANH BẠ
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a class="flex items-center p-2 hover:bg-gray-200 rounded" href="#">
+                                <i class="fas fa-user-friends mr-2"></i>
+                                KẾT BẠN
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a class="flex items-center p-2 hover:bg-gray-200 rounded" href="#">
+                                <i class="fas fa-store mr-2"></i>
+                                CỬA HÀNG ICON
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a class="flex items-center p-2 hover:bg-gray-200 rounded" href="#">
+                                <i class="fas fa-users mr-2"></i>
+                                NHÓM CỦA TÔI
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="mt-4">
+                    <div class="mb-2">
+                        <img alt="Group Image" class="w-full rounded" height="60" src="https://storage.googleapis.com/a1aa/image/UjCoN5Xo3r8MnMFJPuyGO6bWS6UXXABD0wDYznVe6ck.jpg" width="100"/>
+                    </div>
+                    <div class="mb-2">
+                        <img alt="Group Image" class="w-full rounded" height="60" src="https://storage.googleapis.com/a1aa/image/UjCoN5Xo3r8MnMFJPuyGO6bWS6UXXABD0wDYznVe6ck.jpg" width="100"/>
+                    </div>
+                    <div class="mb-2">
+                        <img alt="Group Image" class="w-full rounded" height="60" src="https://storage.googleapis.com/a1aa/image/UjCoN5Xo3r8MnMFJPuyGO6bWS6UXXABD0wDYznVe6ck.jpg" width="100"/>
+                    </div>
+                </div>
+            </aside>
+            <!-- Chat Section -->
+            <main class="flex-1 flex flex-col">
+                <div class="flex-1 overflow-y-auto p-4">
+                    <div class="flex items-start mb-4">
+                        <img alt="User Avatar" class="h-10 w-10 rounded-full" height="40" src="https://storage.googleapis.com/a1aa/image/qmfxVq0HzVgg_-yZMybBovH3L7xPM9RqTs77BcM0J18.jpg" width="40"/>
+                        <div class="ml-2">
+                            <p class="font-bold">Nam</p>
+                            <p>VIETNAM, Binh Duong</p>
+                            <p class="bg-gray-200 p-2 rounded mt-1">
+                                Привет! У тебя есть материалы на русском?
+                                <i class="fas fa-question-circle"></i>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-start mb-4">
+                        <img alt="User Avatar" class="h-10 w-10 rounded-full" height="40" src="https://storage.googleapis.com/a1aa/image/qmfxVq0HzVgg_-yZMybBovH3L7xPM9RqTs77BcM0J18.jpg" width="40"/>
+                        <div class="ml-2">
+                            <p class="font-bold">MY</p>
+                            <p>VIETNAM, Binh Dinh</p>
+                            <p class="bg-gray-200 p-2 rounded mt-1">
+                                Кто-нибудь идёт в кафе?
+                                <i class="fas fa-coffee"></i>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-start mb-4">
+                        <img alt="User Avatar" class="h-10 w-10 rounded-full" height="40" src="https://storage.googleapis.com/a1aa/image/qmfxVq0HzVgg_-yZMybBovH3L7xPM9RqTs77BcM0J18.jpg" width="40"/>
+                        <div class="ml-2">
+                            <p class="font-bold">Hale</p>
+                            <p>VIETNAM, Can Tho</p>
+                            <p class="bg-gray-200 p-2 rounded mt-1">Да, вот они.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start mb-4">
+                        <img alt="User Avatar" class="h-10 w-10 rounded-full" height="40" src="https://storage.googleapis.com/a1aa/image/qmfxVq0HzVgg_-yZMybBovH3L7xPM9RqTs77BcM0J18.jpg" width="40"/>
+                        <div class="ml-2">
+                            <p class="font-bold">Cris</p>
+                            <p>VIETNAM, tp.HCM</p>
+                            <p class="bg-gray-200 p-2 rounded mt-1">Извините, где находится кафе?</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4 bg-gray-100 border-t border-gray-300 flex items-center">
+                    <button class="p-2">
+                        <i class="fas fa-paperclip"></i>
+                    </button>
+                    <button class="p-2 ml-2">
+                        <i class="fas fa-smile"></i>
+                    </button>
+                    <input class="flex-1 p-2 mx-2 border border-gray-300 rounded" placeholder="Type a message..." type="text"/>
+                    <button class="p-2">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </main>
+        </div>
+        <!-- Footer -->
+        <footer class="bg-blue-200 p-4 text-center">
+            <div class="flex justify-center space-x-4 mb-2">
+                <a href="#">
+                    <i class="fab fa-facebook"></i>
+                </a>
+                <a href="#">
+                    <i class="fab fa-tiktok"></i>
+                </a>
+                <a href="#">
+                    <i class="fab fa-google"></i>
+                </a>
+                <a href="#">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+            </div>
+            <div class="flex justify-center space-x-4 text-sm">
+                <a href="#">LIÊN HỆ: BLOG, VỀ CHÚNG TÔI.</a>
+                <a href="#">PHẢN HỒI, ĐÁNH GIÁ.</a>
+                <a href="#">TRỢ GIÚP, CÂU HỎI THƯỜNG GẶP, PHÒNG TIN TỨC.</a>
+                <a href="#">ĐIỀU KHOẢN, CHÍNH SÁCH HỢP PHÁP, COOKIES.</a>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

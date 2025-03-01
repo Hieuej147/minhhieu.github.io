@@ -1,0 +1,17 @@
+.preloader-logo {
+  width: 200px;
+}
+.logo {
+  width: 50px;
+}
+.preloader-text,
+.brand-name {
+  color: #5c5552;
+  transition: opacity 0.5s; /* Preloader fade duration */
+  animation: fadeIn 1s ease-in; /* Text appear duration */
+}
+
+.brand-name {
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}

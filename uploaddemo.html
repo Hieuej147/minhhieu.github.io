@@ -1,0 +1,136 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>DocFlow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <style>
+        
+        
+        /* Sidebar Hover Effect */
+        .sidebar {
+            width: 64px;
+            transition: width 0.3s ease-in-out;
+        }
+        .sidebar:hover {
+            width: 200px;
+        }
+        .sidebar ul li span {
+            display: none;
+            white-space: nowrap;
+        }
+        .sidebar:hover ul li span {
+            display: inline;
+        }
+
+        /* Drag and Drop Effect */
+        .drop-zone {
+            transition: all 0.3s ease-in-out;
+        }
+        .drop-zone.drag-over {
+            background-color: rgba(59, 130, 246, 0.2);
+            border: 2px dashed #3b82f6;
+        }
+        .progress-bar {
+            width: 0;
+            height: 4px;
+            background-color: #3b82f6;
+            transition: width 1s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-blue-100 min-h-screen flex flex-col">
+    <header class="bg-blue-300 p-4 flex justify-between items-center">
+        <div class="flex items-center space-x-4">
+            <img alt="Logo" class="w-12 h-12 rounded-full" src="https://storage.googleapis.com/a1aa/image/WSpP_UzXw_Vnl_bcyWnVREFZKSlA0WSRZsHqDuRtBdE.jpg"/>
+            <span class="text-xl font-bold">DOCFLOW_NHT</span>
+            <div class="relative">
+                <input class="p-2 rounded-l-md border" placeholder="Search" type="text"/>
+                <button class="bg-white p-2 rounded-r-md"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+            <a class="text-black" href="#">BOOKS</a>
+            <a class="text-black" href="#">DOWNLOAD</a>
+            <img alt="User avatar" class="w-8 h-8 rounded-full" src="https://storage.googleapis.com/a1aa/image/SS-3pYX8TFJnfz0GHpTRU6M36Rjwnrnzh9jX9ywH4jg.jpg"/>
+            <i class="fas fa-bell text-black"></i>
+        </div>
+    </header>
+
+    <div class="flex flex-grow">
+        <nav class="sidebar bg-gray-300 h-screen overflow-hidden">
+            <ul class="list-none p-0">
+                <li class="flex items-center p-4 hover:bg-blue-400 cursor-pointer"><i class="fas fa-home w-8 text-lg"></i><span class="ml-2">Home</span></li>
+                <li class="flex items-center p-4 hover:bg-blue-400 cursor-pointer"><i class="fas fa-book w-8 text-lg"></i><span class="ml-2">Library</span></li>
+                <li class="flex items-center p-4 hover:bg-blue-400 cursor-pointer"><i class="fas fa-robot w-8 text-lg"></i><span class="ml-2">AI Assistant</span></li>
+                <li class="flex items-center p-4 hover:bg-blue-400 cursor-pointer"><i class="fas fa-search w-8 text-lg"></i><span class="ml-2">Search</span></li>
+                <li class="flex items-center p-4 hover:bg-blue-400 cursor-pointer"><i class="fas fa-file-upload w-8 text-lg"></i><span class="ml-2">Upload</span></li>
+                <li class="flex items-center p-4 hover:bg-blue-400 cursor-pointer"><i class="fas fa-comments w-8 text-lg"></i><span class="ml-2">Chat</span></li>
+            </ul>
+        </nav>
+
+        <main class="p-8 flex-1">
+            <!-- Progress Bar -->
+            <div class="flex justify-center space-x-8 my-4">
+                <div class="text-center">
+                    <div class="h-1 bg-yellow-400 w-20 mx-auto"></div>
+                    <span>1. Upload</span>
+                </div>
+                <div class="text-center">
+                    <div class="h-1 bg-orange-400 w-20 mx-auto"></div>
+                    <span>2. Details</span>
+                </div>
+                <div class="text-center">
+                    <div class="h-1 bg-red-400 w-20 mx-auto"></div>
+                    <span>3. Done</span>
+                </div>
+            </div>
+
+            <!-- Upload Section -->
+            <div class="flex flex-col items-center">
+                <img alt="Upload Icon" class="w-24 h-24 mb-4" src="https://storage.googleapis.com/a1aa/image/WeJLTfKaGq1VG7RGTBiRb8pX8mRbSEY5A2lOiGvqYP0.jpg"/>
+                <div id="drop-zone" class="drop-zone bg-blue-100 p-8 rounded-lg text-center border-2 border-dashed border-gray-400">
+                    <p class="font-bold mb-4">DRAG AND DROP FILE</p>
+                    <button id="browse-btn" class="bg-blue-500 text-white px-4 py-2 rounded-full mb-4">BROWSE MY FILE</button>
+                    <input type="file" id="file-input" class="hidden" />
+                    <p>Supported files: pdf, doc, docx</p>
+                    <div id="progress-bar" class="progress-bar mt-4"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer class="bg-blue-300 p-4 text-center text-sm w-full">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div><p class="font-bold">LIÊN HỆ</p><p>BLOG</p><p>VỀ CHÚNG TÔI</p></div>
+            <div><p class="font-bold">TRỢ GIÚP</p><p>CÂU HỎI THƯỜNG GẶP</p><p>PHÒNG TIN TỨC</p></div>
+            <div><p class="font-bold">PHẢN HỒI</p><p>ĐÁNH GIÁ</p></div>
+            <div><p class="font-bold">ĐIỀU KHOẢN</p><p>CHÍNH SÁCH HỢP PHÁP</p><p>COOKIES</p></div>
+        </div>
+    </footer>
+
+    <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const browseBtn = document.getElementById('browse-btn');
+        const progressBar = document.getElementById('progress-bar');
+
+        browseBtn.addEventListener('click', () => fileInput.click());
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('drag-over');
+        });
+
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            progressBar.style.width = "100%";
+            setTimeout(() => progressBar.style.width = "0%", 2000);
+        });
+    </script>
+</body>
+</html>

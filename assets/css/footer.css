@@ -1,0 +1,56 @@
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 256px; /* Điều chỉnh theo chiều rộng của sidebar khi không thu gọn */
+  width: calc(
+    100% - 256px
+  ); /* Điều chỉnh theo chiều rộng của sidebar khi không thu gọn */
+  background-color: #d7e9fc;
+  padding: 20px 10px;
+  border-top: 1px solid gray;
+  transition: left 0.3s, width 0.3s; /* Thêm hiệu ứng chuyển động */
+}
+
+.sidebar.active ~ .footer {
+  left: 92px; /* Điều chỉnh theo chiều rộng của sidebar khi thu gọn */
+  width: calc(
+    100% - 92px
+  ); /* Điều chỉnh theo chiều rộng của sidebar khi thu gọn */
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-section {
+  text-align: center;
+  margin: 10px;
+}
+
+.footer-section p {
+  margin: 0;
+  color: #333;
+}
+
+.social-icons a {
+  margin: 0 8px;
+  font-size: 18px;
+  color: #000;
+  text-decoration: none;
+}
+
+.social-icons a:hover {
+  color: #007bff; /* Đổi màu khi hover */
+}
+/* Thêm phần main content vào CSS */
+main {
+  margin-bottom: 100px; /* Điều chỉnh theo chiều cao thực tế của footer */
+  padding: 20px;
+  margin-left: 256px; /* Cân chỉnh với sidebar */
+  transition: margin-left 0.3s;
+}

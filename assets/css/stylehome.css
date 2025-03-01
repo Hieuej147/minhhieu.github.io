@@ -32,6 +32,7 @@ header.scrolled .container {
   align-items: center;
   padding: 10px 20px;
   background-color: rgba(194, 226, 255, 0.73);
+  gap: 30px;
 }
 
 /* Căn chỉnh logo và tên */
@@ -252,4 +253,47 @@ footer {
 .footer-column p {
   font-size: 14px;
   margin: 5px 0;
+}
+
+/* Sửa lại nút đăng nhập */
+.login-btn {
+  display: flex;
+  flex-direction: column; /* Xếp dọc */
+  align-items: center; /* Căn giữa theo chiều ngang */
+  gap: 4px; /* Khoảng cách giữa icon và chữ */
+  padding: 12px 20px; /* Điều chỉnh padding */
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: auto; /* Vẫn giữ nút sang phải */
+  text-align: center; /* Căn giữa chữ */
+}
+.login-btn:hover {
+  transform: translateY(-2px);
+}
+/* Icon */
+.login-btn i {
+  font-size: 30px; /* Tăng kích thước icon */
+  margin-bottom: 2px; /* Thêm khoảng cách dưới icon */
+}
+
+/* Chữ */
+.login-btn p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.2;
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .login-btn {
+    padding: 8px 12px; /* Giảm padding trên mobile */
+  }
+  .login-btn i {
+    font-size: 18px;
+  }
+  .login-btn p {
+    font-size: 10px;
+  }
 }

@@ -151,7 +151,7 @@ form {
   /* border: 2px solid red; */
   z-index: 2;
   transition: 1.8s ease-in-out;
-  background-image: url("/responsive-login-and-registration-form/assets/img/image2.jpg");
+  background-image: url("/assets/img/image2.jpg");
 }
 
 .containerlogin.active .toggle-box::before {

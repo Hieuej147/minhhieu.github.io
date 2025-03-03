@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - DOCFLOW_NHT</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Arial", sans-serif;
+      }
+
+      body {
+        background: linear-gradient(90deg, #e2e2e2, #c9d6ff);
+      }
+
+      .header {
+        background-color: #1a73e8;
+        color: white;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .header h1 {
+        font-size: 24px;
+      }
+
+      .header .actions a {
+        color: white;
+        text-decoration: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        background-color: #dc3545;
+        transition: background-color 0.3s;
+      }
+
+      .header .actions a:hover {
+        background-color: #c82333;
+      }
+
+      .flash-messages {
+        position: fixed;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        width: 80%;
+        max-width: 500px;
+      }
+
+      .flash-message {
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        color: white;
+        text-align: center;
+      }
+
+      .flash-message.success {
+        background-color: #28a745;
+      }
+
+      .flash-message.error {
+        background-color: #dc3545;
+      }
+
+      .dashboard-container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      .dashboard-container h1 {
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      .admin-actions {
+        margin: 20px 0;
+      }
+
+      .btn-admin {
+        background-color: #ff851b;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .footer {
+        background-color: #1a73e8;
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>DOCFLOW_NHT - Dashboard</h1>
+      <div class="actions">
+        <a href="{{ url_for('auth.logout') }}">Đăng xuất</a>
+      </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+      <div class="flash-message {{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
+
+    <div class="dashboard-container">
+      <h1>Xin chào, {{ username }}!</h1>
+      <p>Đây là dashboard của bạn.</p>
+
+      {% if is_admin %}
+      <div class="admin-actions">
+        <a href="{{ url_for('auth.admin_users') }}" class="btn-admin"
+          >Quản lý tài khoản người dùng</a
+        >
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="footer">
+      <p>&copy; 2025 DOCFLOW_NHT. All rights reserved.</p>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const flashMessages = document.querySelectorAll(".flash-message");
+        flashMessages.forEach((message) => {
+          setTimeout(() => {
+            message.style.opacity = "0";
+            setTimeout(() => message.remove(), 300);
+          }, 3000);
+        });
+      });
+    </script>
+  </body>
+</html>

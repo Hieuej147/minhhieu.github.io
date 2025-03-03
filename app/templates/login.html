@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DOCFLOW_NHT</title>
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styleloginnew.css') }}"
+    />
+    <style>
+      /* CSS cho thông báo flash */
+      .flash-messages {
+        position: fixed;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        width: 80%;
+        max-width: 500px;
+      }
+      .flash-message {
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        color: white;
+        text-align: center;
+      }
+      .flash-message.success {
+        background-color: #28a745;
+      }
+      .flash-message.error {
+        background-color: #dc3545;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Hiển thị thông báo flash -->
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+      <div class="flash-message {{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
+    <div class="containerlogin">
+      <div
+        class="form-box login {% if request.path == '/register' %}hide{% endif %}"
+      >
+        <form action="{{ url_for('auth.login') }}" method="POST">
+          <h1>Đăng nhập</h1>
+          <div class="input-box">
+            <input
+              type="text"
+              placeholder="Username"
+              name="username"
+              required
+            />
+            <i class="bx bxs-user"></i>
+          </div>
+          <div class="input-box">
+            <input
+              type="password"
+              placeholder="Pass"
+              name="password"
+              required
+            />
+            <i class="bx bxs-lock-alt"></i>
+          </div>
+          <div class="forgot-link">
+            <a href="#">Forgot password?</a>
+          </div>
+          <button type="submit" class="btn">Đăng nhập</button>
+          <p>or login wih social platforms</p>
+          <div class="social-icons">
+            <a href="#"><i class="bx bxl-google"></i></a>
+            <a href="#"><i class="bx bxl-facebook-circle"></i></a>
+          </div>
+        </form>
+      </div>
+
+      <!-- register -->
+      <div
+        class="form-box register {% if request.path != '/register' %}hide{% endif %}"
+      >
+        <form action="{{ url_for('auth.register') }}" method="POST">
+          <h1>Đăng ký</h1>
+          <div class="input-box">
+            <input
+              type="text"
+              placeholder="Username"
+              name="username"
+              required
+            />
+            <i class="bx bxs-user"></i>
+          </div>
+          <div class="input-box">
+            <input type="text" placeholder="Email" name="email" required />
+            <i class="bx bxs-envelope"></i>
+          </div>
+          <div class="input-box">
+            <input
+              type="password"
+              placeholder="Pass"
+              name="password"
+              required
+            />
+            <i class="bx bxs-lock-alt"></i>
+          </div>
+          <button type="submit" class="btn">Đăng ký</button>
+          <p>or register wih social platforms</p>
+          <div class="social-icons">
+            <a href="#"><i class="bx bxl-google"></i></a>
+            <a href="#"><i class="bx bxl-facebook-circle"></i></a>
+          </div>
+        </form>
+      </div>
+      <div class="toggle-box">
+        <div
+          class="toggle-panel toggle-left {% if request.path != '/register' %}hide{% endif %}"
+        >
+          <h1>Hello, Welcome!</h1>
+          <p>Don't have an account?</p>
+          <button class="btn register-btn">Đăng ký</button>
+        </div>
+        <div
+          class="toggle-panel toggle-right {% if request.path == '/register' %}hide{% endif %}"
+        >
+          <h1>Welcome Back!</h1>
+          <p>Already have an account?</p>
+          <button class="btn login-btn">Đăng nhập</button>
+        </div>
+      </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+    <script>
+      // JavaScript để tự động ẩn thông báo flash sau 3 giây
+      document.addEventListener("DOMContentLoaded", function () {
+        const flashMessages = document.querySelectorAll(".flash-message");
+        flashMessages.forEach((message) => {
+          setTimeout(() => {
+            message.style.opacity = "0";
+            setTimeout(() => message.remove(), 300);
+          }, 3000);
+        });
+      });
+    </script>
+  </body>
+</html>

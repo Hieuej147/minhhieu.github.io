@@ -45,59 +45,236 @@
 
       /* Main content */
       main {
-        margin-left: 256px; /* Khoảng cách với sidebar */
+        margin-left: 256px; /* Khoảng cách với sidebar khi mở rộng */
         margin-top: 60px; /* Khoảng cách với header */
-        padding: 20px;
+        padding: 0; /* Bỏ padding để document-viewer chiếm toàn bộ không gian */
         min-height: calc(
           100vh - 60px - 100px
-        ); /* Đảm bảo main không bị footer đè */
+        ); /* Chiếm toàn bộ chiều cao trừ header */
         transition: margin-left 0.3s;
+        box-sizing: border-box;
+        overflow: auto;
+        position: relative;
       }
 
       .sidebar.active ~ main {
         margin-left: 92px; /* Điều chỉnh khi sidebar thu gọn */
       }
 
-      .profile-container {
-        max-width: 800px;
+      /* Search form */
+      .search-form {
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .search-form input[type="text"] {
+        padding: 10px;
+        width: 300px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        font-size: 16px;
+      }
+
+      .search-form button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      .search-form button:hover {
+        background-color: #0056b3;
+      }
+
+      /* Categories and documents */
+      .categories-section {
+        max-width: 1200px;
         margin: 0 auto;
+      }
+
+      .category {
+        margin-bottom: 40px;
+      }
+
+      .category h2 {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+      }
+
+      .document-list {
+        display: flex; /* Chuyển về flex để hiển thị ngang */
+        gap: 20px; /* Khoảng cách giữa các tài liệu */
+        overflow-x: auto; /* Cho phép cuộn ngang */
+        padding-bottom: 10px;
+        overflow-y: auto;
+      }
+
+      .document-list::-webkit-scrollbar {
+        height: 8px;
+      }
+
+      .document-list::-webkit-scrollbar-thumb {
+        background-color: #ccc;
+        border-radius: 4px;
+      }
+
+      .document-card {
+        flex: 0 0 auto; /* Đảm bảo kích thước cố định */
+        width: 200px; /* Chiều rộng cố định cho mỗi tài liệu */
+        text-align: center;
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+      }
+
+      .document-card:hover {
+        transform: scale(1.05); /* Hiệu ứng phóng to khi hover */
+      }
+
+      .document-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 5px;
+        margin-bottom: 10px;
+      }
+
+      .document-card h3 {
+        font-size: 14px;
+        color: #333;
+        margin-bottom: 5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .document-card .category-text {
+        font-size: 12px;
+        color: #666;
+        margin-bottom: 5px;
+      }
+
+      .document-card .pages {
+        font-size: 12px;
+        color: #999;
+        margin-bottom: 10px;
+      }
+
+      .document-card .file-icon {
+        font-size: 60px;
+        margin-bottom: 10px;
+      }
+
+      .document-card .action-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 10px;
+        flex-wrap: wrap; /* Cho phép các nút xuống dòng nếu không đủ chỗ */
+      }
+
+      .document-card .action-btn {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 12px;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .document-card .save-btn {
+        background-color: #007bff;
+        color: white;
+      }
+
+      .document-card .save-btn:hover {
+        background-color: #0056b3;
+      }
+
+      .document-card .download-btn {
+        background-color: #28a745;
+        color: white;
+      }
+
+      .document-card .download-btn:hover {
+        background-color: #218838;
+      }
+
+      .document-card .edit-btn {
+        background-color: #ff851b;
+        color: white;
+      }
+
+      .document-card .edit-btn:hover {
+        background-color: #e67617;
+      }
+
+      .document-card .delete-btn {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+      }
+
+      .document-card .delete-btn:hover {
+        background-color: #c82333;
+      }
+
+      /* Document viewer từ profile_view.html */
+      /* Document viewer */
+      .document-viewer {
         background-color: white;
         border-radius: 10px;
         padding: 20px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        text-align: center;
+        width: 100%;
+        height: 100%; /* Chiếm toàn bộ chiều cao của main */
+        overflow-y: auto;
+        margin: 0;
+        box-sizing: border-box;
       }
 
-      .profile-container h1 {
+      .document-viewer embed {
+        width: 100%;
+        height: auto;
+        height: calc(100% - 60px); /* Trừ không gian cho tiêu đề và nguồn */
+        display: block; /* Đảm bảo không có khoảng trắng thừa */
+      }
+      .document-viewer h2 {
+        font-size: 24px;
+        color: #1a73e8;
+        margin-bottom: 10px;
+      }
+      .document-viewer .source {
+        font-size: 14px;
+        color: #666;
         margin-bottom: 20px;
-        color: #333;
       }
 
-      .profile-info {
-        margin-bottom: 20px;
-      }
-
-      .profile-info p {
-        margin: 10px 0;
+      .document-viewer .content {
         font-size: 16px;
-        color: #555;
-      }
-
-      .profile-info p strong {
+        line-height: 1.6;
         color: #333;
       }
 
-      .admin-actions {
-        margin: 20px 0;
+      .download-btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #28a745;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-top: 10px;
       }
 
-      .btn-admin {
-        background-color: #ff851b;
-        color: white;
-        padding: 10px 20px;
-        border-radius: 5px;
-        text-decoration: none;
-        font-weight: 500;
+      .download-btn:hover {
+        background-color: #218838;
       }
     </style>
   </head>
@@ -193,7 +370,7 @@
                 </a>
               </li>
               <li>
-                <a href="#">
+                <a href="{{ url_for('auth.upload_document') }}">
                   <i class="fas fa-file-upload"></i>
                   <span class="text">Upload Document</span>
                 </a>
@@ -260,18 +437,211 @@
     {% endif %} {% endwith %}
 
     <!-- Main content -->
-    <main>
-      <div class="profile-container">
-        <h1>Trang cá nhân của {{ user.username }}</h1>
-        <div class="profile-info">
-          <p><strong>Username:</strong> {{ user.username }}</p>
-          <p><strong>Email:</strong> {{ user.email }}</p>
+    <main id="main-content">
+      <div class="categories-section">
+        <!-- Form tìm kiếm -->
+        <form
+          action="{{ url_for('auth.profile', username=user.username) }}"
+          method="GET"
+          class="search-form"
+        >
+          <input
+            type="text"
+            name="search"
+            placeholder="Tìm kiếm tài liệu..."
+            value="{{ request.args.get('search', '') }}"
+          />
+          <button type="submit">Tìm</button>
+        </form>
+
+        {% if categories %} {% for category_name, docs in categories.items() %}
+        <div class="category">
+          <h2>{{ category_name }}</h2>
+          <div class="document-list">
+            {% for doc in docs %}
+            <div class="document-card">
+              <a href="#" class="view-document" data-id="{{ doc.id }}">
+                {% if doc.thumbnail_path %} {% set thumbnail_exists =
+                doc.thumbnail_path and (doc.thumbnail_path | file_exists) %} {%
+                if thumbnail_exists %}
+                <img
+                  src="{{ url_for('static', filename=doc.thumbnail_path) }}"
+                  alt="{{ doc.title }}"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                />
+                {% endif %}
+                <div
+                  style="{% if thumbnail_exists %}display: none;{% else %}display: block;{% endif %}"
+                >
+                  {% if doc.file_type == 'DOC' %}
+                  <i
+                    class="fas fa-file-word fa-5x file-icon"
+                    style="color: #2b579a"
+                  ></i>
+                  {% elif doc.file_type == 'PDF' %}
+                  <i
+                    class="fas fa-file-pdf fa-5x file-icon"
+                    style="color: #f40f0f"
+                  ></i>
+                  {% else %}
+                  <img
+                    src="https://via.placeholder.com/150x200.png?text={{ doc.title }}"
+                    alt="{{ doc.title }}"
+                  />
+                  {% endif %}
+                </div>
+                {% else %} {% if doc.file_type == 'DOC' %}
+                <i
+                  class="fas fa-file-word fa-5x file-icon"
+                  style="color: #2b579a"
+                ></i>
+                {% elif doc.file_type == 'PDF' %}
+                <i
+                  class="fas fa-file-pdf fa-5x file-icon"
+                  style="color: #f40f0f"
+                ></i>
+                {% else %}
+                <img
+                  src="https://via.placeholder.com/150x200.png?text={{ doc.title }}"
+                  alt="{{ doc.title }}"
+                />
+                {% endif %} {% endif %}
+                <h3>{{ doc.title }}</h3>
+              </a>
+              <p class="category-text">{{ doc.category }}</p>
+              <p class="pages">{{ doc.pages }} trang</p>
+              <div class="action-buttons">
+                <form
+                  action="{{ url_for('auth.save_document', document_id=doc.id) }}"
+                  method="POST"
+                  style="display: inline"
+                >
+                  <button type="submit" class="action-btn save-btn">
+                    Save
+                  </button>
+                </form>
+                {% if doc.file_path %}
+                <a
+                  href="{{ url_for('static', filename=doc.file_path) }}"
+                  download
+                  class="action-btn download-btn"
+                  >Download</a
+                >
+                {% endif %}
+                <a
+                  href="{{ url_for('auth.edit_document', document_id=doc.id) }}"
+                  class="action-btn edit-btn"
+                  >Chỉnh sửa</a
+                >
+                <form
+                  action="{{ url_for('auth.delete_document', document_id=doc.id) }}"
+                  method="POST"
+                  style="display: inline"
+                  onsubmit="return confirm('Bạn có chắc chắn muốn xóa tài liệu này?');"
+                >
+                  <button type="submit" class="action-btn delete-btn">
+                    Xóa
+                  </button>
+                </form>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
         </div>
-        {% if is_admin %}
-        <div class="admin-actions">
-          <a href="{{ url_for('auth.admin_users') }}" class="btn-admin"
-            >Quản lý tài khoản người dùng</a
+        {% endfor %} {% else %}
+        <div style="text-align: center; padding: 50px 0">
+          <p>Không có tài liệu nào để hiển thị.</p>
+          <a
+            href="{{ url_for('auth.upload_document') }}"
+            style="
+              display: inline-block;
+              margin-top: 20px;
+              padding: 10px 20px;
+              background-color: #28a745;
+              color: white;
+              text-decoration: none;
+              border-radius: 5px;
+            "
+            >Upload tài liệu ngay</a
           >
+          {% if suggestions %}
+          <h3 style="margin-top: 30px">Gợi ý tài liệu:</h3>
+          <div class="document-list">
+            {% for doc in suggestions %}
+            <div class="document-card">
+              <a href="#" class="view-document" data-id="{{ doc.id }}">
+                {% if doc.thumbnail_path %} {% set thumbnail_exists =
+                doc.thumbnail_path and (doc.thumbnail_path | file_exists) %} {%
+                if thumbnail_exists %}
+                <img
+                  src="{{ url_for('static', filename=doc.thumbnail_path) }}"
+                  alt="{{ doc.title }}"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                />
+                {% endif %}
+                <div
+                  style="{% if thumbnail_exists %}display: none;{% else %}display: block;{% endif %}"
+                >
+                  {% if doc.file_type == 'DOC' %}
+                  <i
+                    class="fas fa-file-word fa-5x file-icon"
+                    style="color: #2b579a"
+                  ></i>
+                  {% elif doc.file_type == 'PDF' %}
+                  <i
+                    class="fas fa-file-pdf fa-5x file-icon"
+                    style="color: #f40f0f"
+                  ></i>
+                  {% else %}
+                  <img
+                    src="https://via.placeholder.com/150x200.png?text={{ doc.title }}"
+                    alt="{{ doc.title }}"
+                  />
+                  {% endif %}
+                </div>
+                {% else %} {% if doc.file_type == 'DOC' %}
+                <i
+                  class="fas fa-file-word fa-5x file-icon"
+                  style="color: #2b579a"
+                ></i>
+                {% elif doc.file_type == 'PDF' %}
+                <i
+                  class="fas fa-file-pdf fa-5x file-icon"
+                  style="color: #f40f0f"
+                ></i>
+                {% else %}
+                <img
+                  src="https://via.placeholder.com/150x200.png?text={{ doc.title }}"
+                  alt="{{ doc.title }}"
+                />
+                {% endif %} {% endif %}
+                <h3>{{ doc.title }}</h3>
+              </a>
+              <p class="category-text">{{ doc.category }}</p>
+              <p class="pages">{{ doc.pages }} trang</p>
+              <div class="action-buttons">
+                <form
+                  action="{{ url_for('auth.save_document', document_id=doc.id) }}"
+                  method="POST"
+                  style="display: inline"
+                >
+                  <button type="submit" class="action-btn save-btn">
+                    Save
+                  </button>
+                </form>
+                {% if doc.file_path %}
+                <a
+                  href="{{ url_for('static', filename=doc.file_path) }}"
+                  download
+                  class="action-btn download-btn"
+                  >Download</a
+                >
+                {% endif %}
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
         </div>
         {% endif %}
       </div>
@@ -334,6 +704,29 @@
             message.style.opacity = "0";
             setTimeout(() => message.remove(), 300);
           }, 3000);
+        });
+
+        let originalContent = null; // Lưu trữ nội dung gốc của main-content
+
+        if (!originalContent) {
+          originalContent = document.getElementById("main-content").innerHTML;
+        }
+
+        document.querySelectorAll(".view-document").forEach((link) => {
+          link.addEventListener("click", function (event) {
+            event.preventDefault();
+            const documentId = this.getAttribute("data-id");
+
+            fetch(`/document/${documentId}`)
+              .then((response) => response.text())
+              .then((html) => {
+                document.getElementById("main-content").innerHTML = html;
+              })
+              .catch((error) => {
+                console.error("Error loading document:", error);
+                alert("Không thể tải nội dung tài liệu!");
+              });
+          });
         });
       });
     </script>

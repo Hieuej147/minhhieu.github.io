@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload Tài liệu - DOCFLOW_NHT</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Arial", sans-serif;
+      }
+
+      body {
+        background: linear-gradient(90deg, #e2e2e2, #c9d6ff);
+      }
+
+      /* Header */
+      .header {
+        background-color: #1a73e8;
+        color: white;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .header h1 {
+        font-size: 24px;
+      }
+
+      .header .actions a {
+        color: white;
+        text-decoration: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        background-color: #ff851b;
+        transition: background-color 0.3s;
+      }
+
+      .header .actions a:hover {
+        background-color: #e67617;
+      }
+
+      /* Flash messages */
+      .flash-messages {
+        position: fixed;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        width: 80%;
+        max-width: 500px;
+      }
+
+      .flash-message {
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        color: white;
+        text-align: center;
+      }
+
+      .flash-message.success {
+        background-color: #28a745;
+      }
+
+      .flash-message.error {
+        background-color: #dc3545;
+      }
+
+      /* Main content */
+      main {
+        padding: 20px;
+        min-height: calc(
+          100vh - 60px - 50px
+        ); /* Đảm bảo main không bị footer đè */
+      }
+
+      .upload-form {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .upload-form h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        text-align: center;
+        color: #333;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+        color: #333;
+      }
+
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+
+      .form-group button {
+        background-color: #28a745;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        width: 100%;
+      }
+
+      .form-group button:hover {
+        background-color: #218838;
+      }
+
+      /* File preview */
+      .form-group #file-preview {
+        text-align: center;
+      }
+
+      .form-group #file-preview p {
+        font-size: 16px;
+        color: #333;
+        margin-bottom: 10px;
+      }
+
+      .form-group #preview-icon {
+        font-size: 60px;
+        margin-bottom: 10px;
+      }
+
+      .form-group #preview-name {
+        font-size: 14px;
+        color: #666;
+        word-break: break-all;
+      }
+
+      /* Footer */
+      .footer {
+        background-color: #1a73e8;
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <div class="header">
+      <h1>DOCFLOW_NHT - Upload Tài liệu</h1>
+      <div class="actions">
+        {% if session.get('is_admin', False) %}
+        <a href="{{ url_for('auth.dashboard') }}">Quay lại Dashboard</a>
+        {% else %}
+        <a href="{{ url_for('auth.profile', username=session['username']) }}"
+          >Quay lại Trang cá nhân</a
+        >
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+      <div class="flash-message {{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
+
+    <!-- Main content -->
+    <main>
+      <div class="upload-form">
+        <h2>Upload Tài liệu</h2>
+        <form
+          action="{{ url_for('auth.upload_document') }}"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <div class="form-group">
+            <label for="title">Tiêu đề:</label>
+            <input type="text" id="title" name="title" required />
+          </div>
+          <div class="form-group">
+            <label for="category">Danh mục:</label>
+            <select id="category" name="category" required>
+              <option value="CÔNG NGHỆ">CÔNG NGHỆ</option>
+              <option value="Y TẾ">Y TẾ</option>
+              <option value="TÀI CHÍNH DOANH NGHIỆP">
+                TÀI CHÍNH DOANH NGHIỆP
+              </option>
+              <option value="GIÁO DỤC">GIÁO DỤC</option>
+              <option value="CHÍNH TRỊ">CHÍNH TRỊ</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="file">Chọn file (DOC hoặc PDF):</label>
+            <input
+              type="file"
+              id="file"
+              name="file"
+              accept=".doc,.pdf"
+              required
+              onchange="previewFile()"
+            />
+          </div>
+          <div class="form-group" id="file-preview" style="display: none">
+            <p>Preview:</p>
+            <i id="preview-icon"></i>
+            <p id="preview-name"></p>
+          </div>
+          <!-- Trong upload_document.html -->
+          <div class="form-group">
+            <label for="pages">Số trang:</label>
+            <input
+              type="number"
+              id="pages"
+              name="pages"
+              min="0"
+              value="0"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <button type="submit">Upload</button>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>© 2025 DOCFLOW_NHT. All rights reserved.</p>
+    </div>
+
+    <!-- JavaScript để tự động ẩn flash messages và preview file -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const flashMessages = document.querySelectorAll(".flash-message");
+        flashMessages.forEach((message) => {
+          setTimeout(() => {
+            message.style.opacity = "0";
+            setTimeout(() => message.remove(), 300);
+          }, 3000);
+        });
+      });
+
+      function previewFile() {
+        const fileInput = document.getElementById("file");
+        const file = fileInput.files[0];
+        const previewDiv = document.getElementById("file-preview");
+        const previewIcon = document.getElementById("preview-icon");
+        const previewName = document.getElementById("preview-name");
+
+        if (file) {
+          previewDiv.style.display = "block";
+          previewName.textContent = file.name;
+          if (file.name.endsWith(".doc")) {
+            previewIcon.className = "fas fa-file-word";
+            previewIcon.style.color = "#2b579a";
+          } else if (file.name.endsWith(".pdf")) {
+            previewIcon.className = "fas fa-file-pdf";
+            previewIcon.style.color = "#f40f0f";
+          }
+        } else {
+          previewDiv.style.display = "none";
+        }
+      }
+    </script>
+  </body>
+</html>

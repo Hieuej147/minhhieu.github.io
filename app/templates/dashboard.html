@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard - DOCFLOW_NHT</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
     <style>
       * {
         margin: 0;
@@ -70,7 +74,7 @@
       }
 
       .dashboard-container {
-        max-width: 800px;
+        max-width: 1200px; /* Tăng chiều rộng để phù hợp với danh sách tài liệu */
         margin: 20px auto;
         padding: 20px;
         background-color: white;
@@ -79,13 +83,11 @@
         text-align: center;
       }
 
-      .dashboard-container h1 {
-        margin-bottom: 20px;
-        color: #333;
-      }
-
       .admin-actions {
         margin: 20px 0;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
       }
 
       .btn-admin {
@@ -95,6 +97,76 @@
         border-radius: 5px;
         text-decoration: none;
         font-weight: 500;
+      }
+
+      .btn-admin:hover {
+        background-color: #e67617;
+      }
+
+      /* Categories and documents */
+      .categories-section {
+        margin-top: 20px;
+        text-align: left; /* Căn trái để giống profile.html */
+      }
+
+      .category {
+        margin-bottom: 40px;
+      }
+
+      .category h2 {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+      }
+
+      .document-list {
+        display: flex;
+        gap: 20px;
+        overflow-x: auto; /* Cho phép cuộn ngang */
+        padding-bottom: 10px;
+      }
+
+      .document-list::-webkit-scrollbar {
+        height: 8px;
+      }
+
+      .document-list::-webkit-scrollbar-thumb {
+        background-color: #ccc;
+        border-radius: 4px;
+      }
+
+      .document-card {
+        flex: 0 0 auto;
+        width: 150px;
+        text-align: center;
+      }
+
+      .document-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 5px;
+        margin-bottom: 10px;
+      }
+
+      .document-card h3 {
+        font-size: 14px;
+        color: #333;
+        margin-bottom: 5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .document-card p {
+        font-size: 12px;
+        color: #666;
+      }
+
+      .document-card .file-icon {
+        font-size: 60px;
+        margin-bottom: 10px;
       }
 
       .footer {
@@ -126,20 +198,62 @@
     {% endif %} {% endwith %}
 
     <div class="dashboard-container">
-      <h1>Xin chào, {{ username }}!</h1>
-      <p>Đây là dashboard của bạn.</p>
-
       {% if is_admin %}
       <div class="admin-actions">
         <a href="{{ url_for('auth.admin_users') }}" class="btn-admin"
           >Quản lý tài khoản người dùng</a
         >
+        <a href="{{ url_for('auth.upload_document') }}" class="btn-admin"
+          >Upload Document</a
+        >
       </div>
       {% endif %}
+
+      <!-- Danh sách tài liệu -->
+      <div class="categories-section">
+        {% if categories %} {% for category_name, docs in categories.items() %}
+        <div class="category">
+          <h2>{{ category_name }}</h2>
+          <div class="document-list">
+            {% for doc in docs %}
+            <div class="document-card">
+              <a href="{{ url_for('auth.view_document', document_id=doc.id) }}">
+                {% if doc.file_path %}
+                <img
+                  src="{{ url_for('static', filename='uploads/' + doc.file_path.split('/')[-1]) }}"
+                  alt="{{ doc.title }}"
+                />
+                {% elif doc.file_type == 'DOC' %}
+                <i
+                  class="fas fa-file-word fa-5x file-icon"
+                  style="color: #2b579a"
+                ></i>
+                {% elif doc.file_type == 'PDF' %}
+                <i
+                  class="fas fa-file-pdf fa-5x file-icon"
+                  style="color: #f40f0f"
+                ></i>
+                {% else %}
+                <img
+                  src="https://via.placeholder.com/150x200.png?text={{ doc.title }}"
+                  alt="{{ doc.title }}"
+                />
+                {% endif %}
+                <h3>{{ doc.title }}</h3>
+              </a>
+              <p>{{ doc.file_type }}</p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %} {% else %}
+        <p>Không có tài liệu nào để hiển thị.</p>
+        {% endif %}
+      </div>
     </div>
 
     <div class="footer">
-      <p>&copy; 2025 DOCFLOW_NHT. All rights reserved.</p>
+      <p>© 2025 DOCFLOW_NHT. All rights reserved.</p>
     </div>
 
     <script>

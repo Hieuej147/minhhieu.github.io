@@ -1,0 +1,48 @@
+<div class="document-viewer" id="document-viewer">
+  <div
+    style="display: flex; justify-content: space-between; align-items: center"
+  >
+    <h2>{{ document.title }}</h2>
+    <button
+      onclick="window.location.reload()"
+      style="
+        padding: 5px 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      "
+    >
+      <i class="fas fa-arrow-left"></i> Quay lại
+    </button>
+  </div>
+  <p class="source">Nguồn: {{ document.file_path }}</p>
+  <div class="content">
+    {% if document.file_type == 'PDF' and document.file_path %} {% if
+    file_exists %}
+    <embed
+      src="{{ url_for('static', filename=document.file_path) }}"
+      type="application/pdf"
+    />
+    {% else %}
+    <p>File không tồn tại trên server. Vui lòng upload lại tài liệu.</p>
+    {% endif %} {% else %}
+    <p>Không thể hiển thị nội dung tài liệu. Vui lòng tải xuống để xem.</p>
+    {% if document.file_path %}
+    <a
+      href="{{ url_for('static', filename=document.file_path) }}"
+      download
+      style="
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #28a745;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+      "
+      >Tải xuống tài liệu</a
+    >
+    {% endif %} {% endif %}
+  </div>
+</div>

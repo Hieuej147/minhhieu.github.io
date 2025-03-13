@@ -2,6 +2,14 @@
 {% extends "base.html" %} {% block title %}Upload Tài Liệu{% endblock %} {%
 block extra_styles %}
 <style>
+  body {
+    background-image: url("{{ url_for("static", filename="img/bakroud1.jpg") }}"); /* Đường dẫn đến hình ảnh trong thư mục static */
+    background-size: cover; /* Phủ kín toàn bộ trang */
+    background-position: center; /* Căn giữa hình ảnh */
+    background-repeat: no-repeat; /* Không lặp lại hình ảnh */
+    background-attachment: fixed; /* Hình ảnh cố định khi cuộn */
+    min-height: 100vh; /* Đảm bảo body đủ chiều cao */
+  }
   .upload-container {
     width: 100%; /* Co giãn theo main */
     max-width: 600px; /* Giới hạn tối đa, nhưng vẫn co giãn nếu main nhỏ hơn */

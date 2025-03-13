@@ -4,6 +4,16 @@
   rel="stylesheet"
   href="{{ url_for('static', filename='css/chatbot.css') }}"
 />
+<style>
+  body {
+    background-image: url("{{ url_for("static", filename="img/bakroud1.jpg") }}"); /* Đường dẫn đến hình ảnh trong thư mục static */
+    background-size: cover; /* Phủ kín toàn bộ trang */
+    background-position: center; /* Căn giữa hình ảnh */
+    background-repeat: no-repeat; /* Không lặp lại hình ảnh */
+    background-attachment: fixed; /* Hình ảnh cố định khi cuộn */
+    min-height: 100vh; /* Đảm bảo body đủ chiều cao */
+  }
+</style>
 <div class="chat-container">
   <!-- Danh sách nguồn (bên trái) -->
   <div class="chat-list">

@@ -1,4 +1,3 @@
-# app/routes/chat.py
 from flask import Blueprint, render_template, request, jsonify, session, redirect, url_for
 from datetime import datetime
 from openai import OpenAI
@@ -7,7 +6,7 @@ chat = Blueprint('chat', __name__, url_prefix='/chat')
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
-    api_key="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",
+    api_key="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",
 )
 
 @chat.route('/')
@@ -30,6 +29,8 @@ def send_message():
                 extra_headers={
                     "HTTP-Referer": "http://127.0.0.1:5000",
                     "X-Title": "DocFlow_NHT",
+                    # Thêm header xác thực nếu cần (ví dụ: Clerk JWT)
+                    # "Authorization": f"Bearer {session.get('jwt_token')}"  # Thêm nếu có
                 },
                 extra_body={},
                 model="deepseek/deepseek-chat::free",

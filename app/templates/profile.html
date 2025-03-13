@@ -6,6 +6,14 @@ endblock %} {% block extra_styles %}
 />
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
+  body {
+    background-image: url("{{ url_for('static', filename='img/bakroud1.jpg') }}"); /* Đường dẫn đến hình ảnh trong thư mục static */
+    background-size: cover; /* Phủ kín toàn bộ trang */
+    background-position: center; /* Căn giữa hình ảnh */
+    background-repeat: no-repeat; /* Không lặp lại hình ảnh */
+    background-attachment: fixed; /* Hình ảnh cố định khi cuộn */
+    min-height: 100vh; /* Đảm bảo body đủ chiều cao */
+  }
   main {
     margin-left: 256px !important; /* Mặc định khi sidebar mở rộng */
     margin-right: 256px !important; /* Cân bằng khoảng trống hai bên */
@@ -40,6 +48,7 @@ endblock %} {% block extra_styles %}
   }
   .document-item {
     position: relative;
+    margin-bottom: 20px; /* Thêm khoảng cách dưới mỗi box tài liệu */
   }
   .add-to-favorite {
     position: absolute;
@@ -61,6 +70,18 @@ endblock %} {% block extra_styles %}
   }
   .add-to-favorite.active {
     background-color: #ff0000;
+  }
+  h3 {
+    color: white;
+  }
+  /* Thêm khoảng cách giữa các danh mục */
+  .categories-section > div.mt-8 {
+    margin-top: 20px; /* Thêm khoảng cách trên mỗi danh mục */
+    padding-top: 10px; /* Thêm padding để tạo khoảng cách với nội dung bên trong */
+  }
+  /* Đảm bảo flex container không bị dính khi wrap */
+  .flex.justify-center.space-x-4.flex-wrap {
+    gap: 20px; /* Thêm khoảng cách giữa các box tài liệu */
   }
 </style>
 {% endblock %} {% block content %}

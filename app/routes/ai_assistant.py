@@ -15,7 +15,7 @@ ai_assistant_bp = Blueprint('ai_assistant', __name__, url_prefix='/ai-assistant'
 # Khởi tạo client OpenRouter
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
-    api_key="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",
+    api_key="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",
 )
 
 # Thư mục lưu tài liệu

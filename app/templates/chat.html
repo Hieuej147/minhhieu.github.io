@@ -4,6 +4,16 @@ block extra_styles %}
   rel="stylesheet"
   href="{{ url_for('static', filename='css/chat.css') }}"
 />
+<style>
+  body {
+    background-image: url("{{ url_for('static', filename='img/bakroud1.jpg') }}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+</style>
 {% endblock %} {% block content %}
 <div class="chat-container">
   <!-- Danh sách nhóm chat (bên trái) -->
@@ -106,6 +116,9 @@ block extra_styles %}
       };
       addMessage(userMessage);
 
+      // Reset input ngay lập tức sau khi gửi
+      input.value = "";
+
       fetch("/chat/send_message", {
         method: "POST",
         headers: {
@@ -135,14 +148,16 @@ block extra_styles %}
           alert("Lỗi kết nối đến server");
         })
         .finally(() => {
-          input.value = ""; // Reset input trong mọi trường hợp
           isSending = false;
         });
     }
   }
 
   document.getElementById("message-input").addEventListener("keypress", (e) => {
-    if (e.key === "Enter") sendMessage();
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault(); // Ngăn chặn xuống dòng
+      sendMessage();
+    }
   });
 </script>
 {% endblock %}

@@ -3,7 +3,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 60px; /* Điều chỉnh chiều cao phù hợp */
+  height: 80px; /* Tăng chiều cao để chứa logo và avatar */
   background-color: #d6ebff;
   z-index: 1000;
   padding: 10px 20px;
@@ -11,6 +11,8 @@
   align-items: center;
   justify-content: space-between;
   border: 1px solid gray;
+  box-sizing: border-box; /* Đảm bảo padding không làm tăng kích thước tổng */
+  gap: 20px; /* Thêm khoảng cách giữa các phần tử */
 }
 
 .logo {
@@ -18,10 +20,24 @@
   align-items: center;
   font-weight: bold;
   font-size: 18px;
+  white-space: nowrap; /* Đảm bảo logo không bị xuống dòng */
+}
+
+.logo a {
+  display: flex;
+  align-items: center;
+  text-decoration: none; /* Bỏ gạch chân của thẻ <a> */
+  color: inherit; /* Giữ màu chữ giống span */
 }
 
 .logo i {
   margin-right: 5px;
+}
+
+.logo svg {
+  width: 65px;
+  height: 56px;
+  vertical-align: middle; /* Căn giữa SVG */
 }
 
 .search-box {
@@ -30,6 +46,8 @@
   background: #cbdff6;
   border-radius: 5px;
   padding: 5px;
+  flex-grow: 1; /* Thanh tìm kiếm sẽ mở rộng để chiếm không gian còn lại */
+  max-width: 500px; /* Giới hạn chiều rộng tối đa */
 }
 
 .search-box input {
@@ -37,19 +55,22 @@
   outline: none;
   background: transparent;
   padding: 5px;
-  width: 500px;
+  width: 100%; /* Chiều rộng linh hoạt theo .search-box */
+  font-size: 1rem;
 }
 
 .search-box button {
   background: transparent;
   border: none;
   cursor: pointer;
+  padding: 5px;
 }
 
 .nav-buttons {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 15px; /* Khoảng cách giữa các nút */
+  white-space: nowrap; /* Đảm bảo các nút không xuống dòng */
 }
 
 .nav-btn {
@@ -74,4 +95,34 @@
   height: 44px;
   border-radius: 50%;
   object-fit: cover;
+}
+
+/* Responsive cho màn hình nhỏ */
+@media (max-width: 768px) {
+  .header {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .search-box {
+    max-width: 200px; /* Giảm chiều rộng trên mobile */
+  }
+
+  .search-box input {
+    font-size: 0.9rem;
+  }
+
+  .nav-btn {
+    padding: 3px 8px;
+    font-size: 0.9rem;
+  }
+
+  .fa-bell {
+    font-size: 16px;
+  }
+
+  .avatar {
+    width: 36px;
+    height: 36px;
+  }
 }

@@ -1,0 +1,66 @@
+{% extends "base.html" %} {% block title %}Lịch sử và Tài liệu gửi đi - {{
+session.get('username', 'Guest') }}{% endblock %} {% block extra_styles %}
+<script src="https://cdn.tailwindcss.com"></script>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+/>
+<link
+  href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+  rel="stylesheet"
+/>
+
+<style>
+  body {
+    background-image: url("https://img.lovepik.com/bg/20240429/Stunning-3D-Render-Mesmerizing-Blue-Books-on-a-Background-of_8464637_wh860.jpg!/fw/860");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+  #main-content {
+    margin-left: 250px;
+    padding: 20px;
+  }
+  .document-item {
+    padding: 8px;
+    border-bottom: 1px solid #ccc;
+  }
+</style>
+{% endblock %} {% block content %}
+<div
+  class="bg-blue-100 bg-opacity-80 rounded-lg p-4 w-full max-w-4xl mx-auto mt-10 ml-64"
+>
+  <div class="flex gap-4">
+    <!-- Lịch sử tài liệu đã xem -->
+    <div class="w-1/2 p-2 overflow-y-auto" style="max-height: 400px">
+      <h2 class="text-xl font-bold mb-4 text-center text-blue-800">
+        Lịch sử tài liệu đã xem
+      </h2>
+      <ul id="history-list" class="list-disc pl-5"></ul>
+    </div>
+
+    <!-- Tài liệu gửi đi -->
+    <div
+      class="w-1/2 p-2 border-l-2 border-blue-300 overflow-y-auto"
+      style="max-height: 400px"
+    >
+      <h2 class="text-xl font-bold mb-4 text-center text-blue-800">
+        Tài liệu gửi đi
+      </h2>
+      <div class="flex flex-col">
+        <div class="bg-blue-200 h-10 mb-2 rounded"></div>
+        <div class="bg-blue-200 h-10 mb-2 rounded"></div>
+        <div class="bg-blue-200 h-10 mb-2 rounded"></div>
+        <div class="bg-blue-200 h-10 mb-2 rounded"></div>
+        <div class="bg-blue-200 h-10 mb-2 rounded"></div>
+        <div class="bg-blue-200 h-10 mb-2 rounded"></div>
+        <div class="bg-blue-200 h-10 mb-2 rounded"></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block extra_scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ url_for('static', filename='js/n2.js') }}"></script>
+{% endblock %}

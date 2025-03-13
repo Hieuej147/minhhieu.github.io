@@ -1,15 +1,43 @@
+# app/routes/auth.py
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from app import db
 from app.models.user import User
 from app.models.document import Document
-from pdf2image import convert_from_path
+import os
+from app.models.favorite_document import FavoriteDocument
+from app.models.downloaded_document import DownloadedDocument
 
 auth = Blueprint('auth', __name__)
 
 @auth.route('/', methods=['GET'])
 def index():
     return render_template("home.html")
+@auth.route('/privacy_policy')
+def privacy_policy():
+    """
+    Route cho trang Chính sách bảo mật.
+    """
+    return render_template('privacy_policy.html')
+@auth.route('/feedback')
+def feedback():
+    """
+    Route cho trang Phản hồi người dùng.
+    """
+    return render_template('feedback.html')
+@auth.route('/search')
+def search():
+    query = request.args.get('query', '')  # Lấy query từ URL
+    # Logic giả lập để tạo kết quả (thay bằng truy vấn cơ sở dữ liệu thực tế)
+    if query:
+        results = [f"Kết quả {i} cho '{query}'" for i in range(1, 6)]  # 5 kết quả mẫu
+    else:
+        results = []
+    return render_template('search_results.html', query=query, results=results)
+@auth.route('/books')
+def books():
+    return render_template('books.html')
 
+# Các route khác giữ nguyên
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -79,7 +107,7 @@ def profile(username):
         flash('Vui lòng đăng nhập để xem trang cá nhân!', 'error')
         return redirect(url_for('auth.login'))
 
-    if session.get('is_admin', False):  # Nếu là admin, chuyển hướng đến dashboard
+    if session.get('is_admin', False):
         return redirect(url_for('auth.dashboard'))
 
     user = User.query.filter_by(username=username).first_or_404()
@@ -87,37 +115,51 @@ def profile(username):
     # Lấy tham số tìm kiếm và danh mục từ query string
     search_query = request.args.get('search', '').strip()
     selected_category = request.args.get('category', '').strip()
-    
-    # Lấy danh sách tài liệu của người dùng
+
+    # Lấy tài liệu của user
     query = Document.query.filter_by(user_id=user.id)
-    
     if search_query:
         query = query.filter(Document.title.ilike(f'%{search_query}%'))
-    
     if selected_category:
         query = query.filter(Document.category == selected_category)
-    
     documents = query.all()
-    
-    # Nhóm tài liệu theo danh mục
+
+    # Lấy tài liệu của admin (luôn hiển thị cho tất cả người dùng)
+    admin_user = User.query.filter_by(username='admin').first()
+    admin_documents = []
+    if admin_user:
+        admin_query = Document.query.filter_by(user_id=admin_user.id)
+        if search_query:
+            admin_query = admin_query.filter(Document.title.ilike(f'%{search_query}%'))
+        if selected_category:
+            admin_query = admin_query.filter(Document.category == selected_category)
+        admin_documents = admin_query.all()
+
+    # Nhóm tài liệu của user
     categories = {}
     for doc in documents:
-        if doc.category not in categories:
-            categories[doc.category] = []
-        categories[doc.category].append(doc)
+        category = doc.category if doc.category else 'Khác'
+        if category not in categories:
+            categories[category] = []
+        categories[category].append(doc)
 
-    # Lấy tất cả danh mục có sẵn
+    # Thêm tài liệu của admin vào danh mục "Tài liệu từ Admin"
+    if admin_documents:
+        categories['Tài liệu từ Admin'] = admin_documents
+
+    # Lấy danh sách tất cả các danh mục để hiển thị nút
     all_categories = Document.query.with_entities(Document.category).distinct().all()
-    all_categories = [cat[0] for cat in all_categories]
+    all_categories = [cat[0] for cat in all_categories if cat[0]]  # Loại bỏ None
+    all_categories.append('Tài liệu từ Admin')  # Thêm danh mục của admin
 
-    # Nếu không có tài liệu, lấy gợi ý từ admin
-    suggestions = []
-    if not documents and not selected_category:
-        admin_user = User.query.filter_by(username='admin').first()
-        if admin_user:
-            suggestions = Document.query.filter_by(user_id=admin_user.id).limit(5).all()
-
-    return render_template('profile.html', user=user, categories=categories, suggestions=suggestions, all_categories=all_categories, selected_category=selected_category, is_admin=session.get('is_admin', False))
+    return render_template(
+        'profile.html',
+        user=user,
+        categories=categories,
+        all_categories=all_categories,
+        selected_category=selected_category,
+        is_admin=session.get('is_admin', False)
+    )
 
 @auth.route('/logout')
 def logout():
@@ -197,117 +239,7 @@ def delete_user(user_id):
 
     return redirect(url_for('auth.admin_users'))
 
-from pdf2image import convert_from_path
-import os
-
-@auth.route('/upload_document', methods=['GET', 'POST'])
-def upload_document():
-    if 'logged_in' not in session:
-        flash('Vui lòng đăng nhập trước!', 'error')
-        return redirect(url_for('auth.login'))
-
-    if request.method == 'POST':
-        title = request.form.get('title')
-        category = request.form.get('category')
-        pages = request.form.get('pages', '0')
-        file = request.files.get('file')
-        user = User.query.filter_by(username=session['username']).first()
-
-        if not title or not category:
-            flash('Tiêu đề và danh mục không được để trống!', 'error')
-            return redirect(url_for('auth.upload_document'))
-
-        try:
-            pages = int(pages)
-        except ValueError:
-            flash('Số trang phải là một số hợp lệ!', 'error')
-            return redirect(url_for('auth.upload_document'))
-
-        if file and (file.filename.endswith('.doc') or file.filename.endswith('.pdf')):
-            file_type = 'DOC' if file.filename.endswith('.doc') else 'PDF'
-            # Đường dẫn đến thư mục app/static/uploads
-            upload_dir = os.path.join('app', 'static', 'uploads')
-            if not os.path.exists(upload_dir):
-                os.makedirs(upload_dir)
-
-            thumbnail_dir = os.path.join('app', 'static', 'thumbnails')
-            if not os.path.exists(thumbnail_dir):
-                os.makedirs(thumbnail_dir)
-
-            # Tạo tên file và kiểm tra trùng lặp
-            file_path = f"uploads/{file.filename}"  # Đường dẫn tương đối để lưu vào cơ sở dữ liệu
-            base, extension = os.path.splitext(file.filename)
-            counter = 1
-            saved_file_path = os.path.join('app', 'static', file_path)  # Đường dẫn đầy đủ để lưu file
-            while os.path.exists(saved_file_path):
-                file_path = f"uploads/{base}_{counter}{extension}"
-                saved_file_path = os.path.join('app', 'static', file_path)
-                counter += 1
-
-            # Lưu file với tên đã được điều chỉnh
-            file.save(saved_file_path)
-
-            # Tạo thumbnail nếu là PDF
-            thumbnail_path = None
-            if file_type == 'PDF':
-                try:
-                    images = convert_from_path(saved_file_path, first_page=0, last_page=1)
-                    if images:
-                        thumbnail_filename = f"thumbnails/{base}_thumb.jpg"
-                        counter = 1
-                        saved_thumbnail_path = os.path.join('app', 'static', thumbnail_filename)
-                        while os.path.exists(saved_thumbnail_path):
-                            thumbnail_filename = f"thumbnails/{base}_thumb_{counter}.jpg"
-                            saved_thumbnail_path = os.path.join('app', 'static', thumbnail_filename)
-                            counter += 1
-                        images[0].save(saved_thumbnail_path, 'JPEG')
-                        thumbnail_path = thumbnail_filename
-                except Exception as e:
-                    print(f"Error creating thumbnail for PDF: {e}")
-
-            # Lưu thông tin tài liệu vào cơ sở dữ liệu với file_path đã được điều chỉnh
-            document = Document(
-                title=title,
-                category=category,
-                file_type=file_type,
-                user_id=user.id,
-                file_path=file_path,  # Lưu đường dẫn tương đối (uploads/filename)
-                thumbnail_path=thumbnail_path,
-                pages=pages
-            )
-            db.session.add(document)
-            try:
-                db.session.commit()
-                flash('Upload tài liệu thành công!', 'success')
-            except Exception as e:
-                db.session.rollback()
-                flash('Upload tài liệu thất bại!', 'error')
-        else:
-            flash('Chỉ hỗ trợ file DOC hoặc PDF!', 'error')
-
-        if session.get('is_admin', False):
-            return redirect(url_for('auth.dashboard'))
-        else:
-            return redirect(url_for('auth.profile', username=user.username))
-
-    return render_template('upload_document.html')
-
-@auth.route('/document/<int:document_id>')
-def view_document(document_id):
-    if 'logged_in' not in session:
-        flash('Vui lòng đăng nhập trước!', 'error')
-        return redirect(url_for('auth.login'))
-
-    document = Document.query.get_or_404(document_id)
-    user = User.query.filter_by(username=session['username']).first()
-    if session['username'] != document.user.username:
-        flash('Bạn không có quyền xem tài liệu này!', 'error')
-        return redirect(url_for('auth.login'))
-
-    # Kiểm tra file tồn tại
-    file_exists = os.path.exists(os.path.join('app', 'static', document.file_path))
-
-    return render_template('profile_view.html', document=document, user=user, file_exists=file_exists)
+@auth.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
     if 'logged_in' not in session:
         flash('Vui lòng đăng nhập trước!', 'error')
@@ -328,96 +260,63 @@ def dashboard():
 
     return render_template('dashboard.html', username=session['username'], categories=categories, is_admin=session.get('is_admin', False))
 
-@auth.route('/delete_document/<int:document_id>', methods=['POST'])
-def delete_document(document_id):
-    if 'logged_in' not in session:
+
+@auth.route('/favorite-and-downloaded', methods=['GET'])
+def favorite_and_downloaded():
+    if 'logged_in' not in session or 'username' not in session:
         flash('Vui lòng đăng nhập trước!', 'error')
         return redirect(url_for('auth.login'))
 
-    document = Document.query.get_or_404(document_id)
     user = User.query.filter_by(username=session['username']).first()
-    if document.user_id != user.id:
-        flash('Bạn không có quyền xóa tài liệu này!', 'error')
-        if session.get('is_admin', False):
-            return redirect(url_for('auth.dashboard'))
-        else:
-            return redirect(url_for('auth.profile', username=user.username))
+    if not user:
+        flash('Người dùng không tồn tại!', 'error')
+        return redirect(url_for('auth.logout'))
+
+    # Lấy danh sách tài liệu yêu thích
+    favorite_docs = FavoriteDocument.query.filter_by(user_id=user.id).all()
+    # Lấy danh sách tài liệu đã tải về
+    downloaded_docs = DownloadedDocument.query.filter_by(user_id=user.id).all()
+
+    # Lấy danh sách document_id yêu thích để kiểm tra trạng thái nút "Thêm vào yêu thích"
+    favorite_doc_ids = [fav.document_id for fav in favorite_docs]
+
+    return render_template(
+        'favorite_and_downloaded.html',
+        user=user,
+        favorite_docs=favorite_docs,  # Danh sách FavoriteDocument
+        downloaded_docs=downloaded_docs,  # Danh sách DownloadedDocument
+        favorite_doc_ids=favorite_doc_ids
+    )
+
+@auth.route('/toggle-favorite/<int:document_id>', methods=['POST'])
+def toggle_favorite(document_id):
+    if 'logged_in' not in session or 'username' not in session:
+        flash('Vui lòng đăng nhập trước!', 'error')
+        return redirect(url_for('auth.login'))
+
+    user = User.query.filter_by(username=session['username']).first()
+    if not user:
+        flash('Người dùng không tồn tại!', 'error')
+        return redirect(url_for('auth.logout'))
+
+    document = Document.query.get_or_404(document_id)
+    favorite = FavoriteDocument.query.filter_by(user_id=user.id, document_id=document_id).first()
+
+    if favorite:
+        # Xóa khỏi danh sách yêu thích
+        db.session.delete(favorite)
+        flash('Đã xóa khỏi tài liệu yêu thích!', 'success')
+    else:
+        # Thêm vào danh sách yêu thích
+        favorite = FavoriteDocument(user_id=user.id, document_id=document_id)
+        db.session.add(favorite)
+        flash('Đã thêm vào tài liệu yêu thích!', 'success')
 
     try:
-        if document.file_path:
-            import os
-            file_path = os.path.join('static', document.file_path)
-            if os.path.exists(file_path):
-                os.remove(file_path)
-
-        db.session.delete(document)
         db.session.commit()
-        flash('Xóa tài liệu thành công!', 'success')
     except Exception as e:
         db.session.rollback()
-        flash('Xóa tài liệu thất bại!', 'error')
+        flash('Có lỗi xảy ra, vui lòng thử lại!', 'error')
 
-    if session.get('is_admin', False):
-        return redirect(url_for('auth.dashboard'))
-    else:
-        return redirect(url_for('auth.profile', username=user.username))
-
-@auth.route('/edit_document/<int:document_id>', methods=['GET', 'POST'])
-def edit_document(document_id):
-    if 'logged_in' not in session:
-        flash('Vui lòng đăng nhập trước!', 'error')
-        return redirect(url_for('auth.login'))
-
-    document = Document.query.get_or_404(document_id)
-    user = User.query.filter_by(username=session['username']).first()
-    if document.user_id != user.id:
-        flash('Bạn không có quyền chỉnh sửa tài liệu này!', 'error')
-        if session.get('is_admin', False):
-            return redirect(url_for('auth.dashboard'))
-        else:
-            return redirect(url_for('auth.profile', username=user.username))
-
-    if request.method == 'POST':
-        document.title = request.form['title']
-        document.category = request.form['category']
-        document.pages = int(request.form['pages'])
-        try:
-            db.session.commit()
-            flash('Cập nhật tài liệu thành công!', 'success')
-        except Exception as e:
-            db.session.rollback()
-            flash('Cập nhật tài liệu thất bại!', 'error')
-
-        if session.get('is_admin', False):
-            return redirect(url_for('auth.dashboard'))
-        else:
-            return redirect(url_for('auth.profile', username=user.username))
-
-    return render_template('edit_document.html', document=document)
-
-@auth.route('/save_document/<int:document_id>', methods=['POST'])
-def save_document(document_id):
-    if 'logged_in' not in session:
-        flash('Vui lòng đăng nhập trước!', 'error')
-        return redirect(url_for('auth.login'))
-
-    document = Document.query.get_or_404(document_id)
-    user = User.query.filter_by(username=session['username']).first()
-
-    favorite = Favorite.query.filter_by(user_id=user.id, document_id=document.id).first()
-    if favorite:
-        flash('Tài liệu đã được lưu trong danh sách yêu thích!', 'error')
-    else:
-        favorite = Favorite(user_id=user.id, document_id=document.id)
-        db.session.add(favorite)
-        try:
-            db.session.commit()
-            flash('Đã lưu tài liệu vào danh sách yêu thích!', 'success')
-        except Exception as e:
-            db.session.rollback()
-            flash('Lưu tài liệu thất bại!', 'error')
-
-    if session.get('is_admin', False):
-        return redirect(url_for('auth.dashboard'))
-    else:
-        return redirect(url_for('auth.profile', username=user.username))
+    # Chuyển hướng về trang trước đó
+    return redirect(request.referrer or url_for('auth.profile', username=user.username))

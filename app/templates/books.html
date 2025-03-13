@@ -1,0 +1,363 @@
+<html>
+  <head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .background-image {
+        background-image: url("https://png.pngtree.com/thumb_back/fw800/background/20231001/pngtree-empty-book-opened-on-blue-background-image_13307901.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 100vh;
+        width: 100vw;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -1;
+      }
+      .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: #34d399; /* Green color for success */
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        display: none;
+        z-index: 1000;
+        animation: fadeIn 0.5s, fadeOut 0.5s 2.5s forwards;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes fadeOut {
+        from {
+          opacity: 1;
+        }
+        to {
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body
+    class="background-image bg-white flex justify-center items-center min-h-screen"
+  >
+    <div
+      class="w-[700px] max-w-2xl bg-white bg-opacity-80 p-4 rounded-lg relative overflow-y-auto max-h-screen"
+    >
+      <div class="bg-blue-200 text-center py-2 rounded">
+        <h1 class="text-lg font-semibold">CÁC ĐẦU SÁCH PHỔ BIẾN</h1>
+      </div>
+      <div class="mt-4">
+        <input
+          type="text"
+          id="search-input"
+          onkeyup="searchFiles()"
+          placeholder="Tìm kiếm sách..."
+          class="w-full p-2 border border-gray-300 rounded mb-4"
+        />
+        <select
+          id="category-select"
+          onchange="searchFiles()"
+          class="w-full p-2 border border-gray-300 rounded"
+        >
+          <option value="">Tất cả ngành</option>
+          <option value="science">Khoa học</option>
+          <option value="technology">Công nghệ</option>
+          <option value="engineering">Kỹ thuật</option>
+          <option value="mathematics">Toán học</option>
+        </select>
+      </div>
+      <div id="file-container" class="mt-4 space-y-4 max-h-96 overflow-y-auto">
+        <a
+          href="https://thuviensachpdf.com/ai-trong-cuoc-cach-mang-cong-nghe-40"
+          target="_blank"
+          class="block bg-gray-300 py-4 px-6 rounded"
+          data-category="science"
+        >
+          <p class="text-lg">
+            ai trong cuoc cach mang cong nghe 4.0 - Khoa học
+          </p>
+        </a>
+        <a
+          href="https://thuviensachpdf.com/think-java-cach-suy-nghi-nhu-nha-khoa-hoc-may-tinh"
+          target="_blank"
+          class="block bg-gray-300 py-4 px-6 rounded"
+          data-category="technology"
+        >
+          <p class="text-lg">
+            cach-suy-nghi-nhu-nha-khoa-hoc-may-tinh - Công nghệ
+          </p>
+        </a>
+        <a
+          href="https://thuviensachpdf.com/ky-thuat-trong-va-cham-soc-mot-so-cay-trong-chinh"
+          target="_blank"
+          class="block bg-gray-300 py-4 px-6 rounded"
+          data-category="engineering"
+        >
+          <p class="text-lg">
+            ky-thuat-trong-va-cham-soc-mot-so-cay-trong-chinh - Kỹ thuật
+          </p>
+        </a>
+        <a
+          href="https://thuviensachpdf.com/thien-tai-ky-di-va-dot-pha-toan-hoc-cua-the-ky"
+          target="_blank"
+          class="block bg-gray-300 py-4 px-6 rounded"
+          data-category="mathematics"
+        >
+          <p class="text-lg">
+            thien-tai-ky-di-va-dot-pha-toan-hoc-cua-the-ky - Toán học
+          </p>
+        </a>
+        <a
+          href="https://thuviensachpdf.com/cau-truc-cua-cac-cuoc-cach-mang-khoa-hoc"
+          target="_blank"
+          class="block bg-gray-300 py-4 px-6 rounded"
+          data-category="science"
+        >
+          <p class="text-lg">
+            cau-truc-cua-cac-cuoc-cach-mang-khoa-hoc - Khoa học
+          </p>
+        </a>
+        <a
+          href="https://thuviensachpdf.com/cong-nghe-blockchain"
+          target="_blank"
+          class="block bg-gray-300 py-4 px-6 rounded"
+          data-category="technology"
+        >
+          <p class="text-lg">cong nghe lockchain - Công nghệ</p>
+        </a>
+        <a
+          href="https://thuviensachpdf.com/anh-sang-khoa-hoc-ky-thuat"
+          target="_blank"
+          class="block bg-gray-300 py-4 px-6 rounded"
+          data-category="engineering"
+        >
+          <p class="text-lg">anh sang khoa hoc ky thuat - Kỹ thuật</p>
+        </a>
+        <a
+          href="https://thuviensachpdf.com/bai-tap-phuong-phap-quy-nap-toan-hoc-day-so-cap-so-cong-va-cap-so-nhan"
+          target="_blank"
+          class="block bg-gray-300 py-4 px-6 rounded"
+          data-category="mathematics"
+        >
+          <p class="text-lg">
+            bai tap phuong phap quy nap toan hoc day so cap so cong va
+            cap-so-nhan - Toán học
+          </p>
+        </a>
+        <a
+          href="https://thuviensachpdf.com/kien-thuc-dinh-duong-nen-tang"
+          target="_blank"
+          class="block bg-gray-300 py-4 px-6 rounded"
+          data-category="science"
+        >
+          <p class="text-lg">kien thuc dinh duong nen tang - Khoa học</p>
+        </a>
+        <a
+          href="https://nhasachmienphi.com/programming-asp-net-mvc-4.html"
+          target="_blank"
+          class="block bg-gray-300 py-4 px-6 rounded"
+          data-category="technology"
+        >
+          <p class="text-lg">programming asp net mvc-4 - Công nghệ</p>
+        </a>
+      </div>
+      <div class="mt-4">
+        <form
+          class="flex flex-col items-center"
+          onsubmit="handleFileUpload(event)"
+        >
+          <label
+            for="file-upload"
+            class="block mb-2 text-lg font-medium text-gray-700"
+            >Tải lên sách mới</label
+          >
+          <input
+            type="file"
+            id="file-upload"
+            name="file-upload"
+            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+            multiple
+          />
+          <select
+            id="file-category"
+            class="block w-full mt-2 p-2 border border-gray-300 rounded"
+          >
+            <option value="science">Khoa học</option>
+            <option value="technology">Công nghệ</option>
+            <option value="engineering">Kỹ thuật</option>
+            <option value="mathematics">Toán học</option>
+          </select>
+          <button
+            type="submit"
+            class="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
+          >
+            Tải lên
+          </button>
+        </form>
+      </div>
+
+      <a
+        href="{{ url_for('auth.login') if 'username' not in session else url_for('auth.profile', username=session['username']) }}"
+      >
+        <button
+          class="absolute top-4 left-4 bg-blue-500 text-white p-2 rounded-full"
+        >
+          <i class="fas fa-arrow-left"></i>
+        </button>
+      </a>
+    </div>
+    <!-- Iframe hiển thị đè lên danh sách -->
+    <div
+      id="pdf-overlay"
+      class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden z-50"
+    >
+      <div
+        class="relative bg-white p-4 rounded-lg shadow-lg w-[90%] max-w-4xl h-[95%] flex flex-col"
+      >
+        <!-- Nút đóng -->
+        <button
+          id="close-pdf"
+          class="absolute top-2 right-2 bg-blue-500 text-white px-3 py-1 rounded-full text-lg"
+        >
+          ✖
+        </button>
+        <!-- Iframe PDF -->
+        <iframe
+          id="pdf-viewer"
+          class="w-full h-full border rounded-lg shadow-lg"
+          src=""
+        ></iframe>
+      </div>
+    </div>
+    <!-- Thông báo thành công -->
+    <div id="notification" class="notification">Tải lên thành công!</div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const fileLinks = document.querySelectorAll("#file-container a");
+        const pdfViewer = document.getElementById("pdf-viewer");
+        const closeBtn = document.getElementById("close-pdf");
+        const overlay = document.getElementById("pdf-overlay");
+
+        fileLinks.forEach((link) => {
+          link.addEventListener("click", function (event) {
+            event.preventDefault(); // Ngăn mở tab mới
+            const pdfUrl = this.href;
+            const pdfName = this.textContent; // Lấy tên file từ nội dung thẻ <a>
+            const timestamp = new Date().toLocaleString(); // Lấy thời gian hiện tại
+
+            // Lưu lịch sử xem vào localStorage
+            let history = JSON.parse(localStorage.getItem("pdfHistory")) || [];
+            history = history.filter((entry) => entry.url !== pdfUrl); // Loại bỏ trùng lặp
+            history.unshift({ url: pdfUrl, name: pdfName, time: timestamp });
+            if (history.length > 10) history.pop(); // Giới hạn 10 mục
+            localStorage.setItem("pdfHistory", JSON.stringify(history));
+
+            // Hiển thị overlay và iframe
+            pdfViewer.src = pdfUrl;
+            overlay.classList.remove("hidden");
+          });
+        });
+
+        // Xử lý khi bấm nút đóng
+        closeBtn.addEventListener("click", function () {
+          overlay.classList.add("hidden");
+          pdfViewer.src = ""; // Xóa nội dung để giải phóng tài nguyên
+        });
+      });
+
+      function handleFileUpload(event) {
+        event.preventDefault();
+        const fileList = document.getElementById("file-upload").files;
+        const fileCategory = document.getElementById("file-category").value;
+        const fileContainer = document.getElementById("file-container");
+        const overlay = document.getElementById("pdf-overlay");
+        const pdfViewer = document.getElementById("pdf-viewer");
+        const notification = document.getElementById("notification");
+
+        if (fileList.length === 0) {
+          alert("Vui lòng chọn ít nhất một file để tải lên!");
+          return;
+        }
+
+        for (let i = 0; i < fileList.length; i++) {
+          const file = fileList[i];
+          const fileURL = URL.createObjectURL(file);
+
+          const fileLink = document.createElement("a");
+          fileLink.href = "#"; // Không mở tab mới
+          fileLink.className =
+            "block bg-gray-300 py-4 px-6 rounded cursor-pointer";
+          fileLink.setAttribute("data-category", fileCategory);
+          fileLink.innerHTML = `<p class="text-lg">${file.name} - ${
+            fileCategory.charAt(0).toUpperCase() + fileCategory.slice(1)
+          }</p>`;
+
+          // Gắn sự kiện click để lưu lịch sử xem
+          fileLink.addEventListener("click", function (event) {
+            event.preventDefault();
+            const pdfUrl = fileURL;
+            const pdfName = file.name; // Sử dụng tên file thay vì textContent
+            const timestamp = new Date().toLocaleString();
+
+            // Lưu lịch sử xem vào localStorage
+            let history = JSON.parse(localStorage.getItem("pdfHistory")) || [];
+            history = history.filter((entry) => entry.url !== pdfUrl); // Loại bỏ trùng lặp
+            history.unshift({ url: pdfUrl, name: pdfName, time: timestamp });
+            if (history.length > 10) history.pop(); // Giới hạn 10 mục
+            localStorage.setItem("pdfHistory", JSON.stringify(history));
+
+            // Hiển thị overlay và iframe
+            pdfViewer.src = pdfUrl;
+            overlay.classList.remove("hidden");
+          });
+
+          fileContainer.appendChild(fileLink);
+        }
+
+        // Hiển thị thông báo thành công
+        notification.style.display = "block";
+        setTimeout(() => {
+          notification.style.display = "none";
+        }, 3000); // Ẩn thông báo sau 3 giây
+      }
+
+      function searchFiles() {
+        const input = document.getElementById("search-input");
+        const filter = input.value.toLowerCase();
+        const categorySelect = document.getElementById("category-select");
+        const selectedCategory = categorySelect.value;
+        const fileContainer = document.getElementById("file-container");
+        const files = fileContainer.getElementsByTagName("a");
+
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          const textValue = file.textContent || file.innerText;
+          const fileCategory = file.getAttribute("data-category");
+
+          if (
+            (textValue.toLowerCase().indexOf(filter) > -1 || filter === "") &&
+            (fileCategory === selectedCategory || selectedCategory === "")
+          ) {
+            file.style.display = "";
+          } else {
+            file.style.display = "none";
+          }
+        }
+      }
+    </script>
+
+    <script src="{{ url_for('static', filename='js/n.js') }}"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+  </body>
+</html>

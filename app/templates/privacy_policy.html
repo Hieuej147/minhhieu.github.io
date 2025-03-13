@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DocFlow_NHT - Chính sách bảo mật</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/header.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/footer.css') }}"
+    />
+    <style>
+      /* Override footer.css to remove sidebar dependency */
+      .footer {
+        position: fixed;
+        bottom: 0;
+        left: 0; /* Đặt left về 0 để bắt đầu từ mép trái */
+        width: 100%; /* Chiếm toàn bộ chiều rộng */
+        background-color: #d7e9fc;
+        padding: 10px 5px; /* Giữ padding nhỏ */
+        border-top: 1px solid gray;
+        /* Loại bỏ transition vì không cần thay đổi vị trí */
+      }
+
+      .footer-container {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        flex-wrap: wrap;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .footer-section {
+        text-align: center;
+        margin: 5px;
+      }
+
+      .footer-section p {
+        margin: 0;
+        color: #333;
+        font-size: 12px;
+        line-height: 1.2;
+      }
+
+      .footer-section p strong {
+        font-size: 13px;
+      }
+
+      .social-icons a {
+        margin: 0 5px;
+        font-size: 16px;
+        color: #000;
+        text-decoration: none;
+      }
+
+      .social-icons a:hover {
+        color: #007bff;
+      }
+      * {
+        font-family: "Inter", sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-[#d9e3f0] font-roboto">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <a
+          href="{% if session.get('logged_in', False) %}{{ url_for('auth.profile', username=session.get('username', '')) }}{% else %}{{ url_for('auth.index') }}{% endif %}"
+          ><svg
+            width="65"
+            height="56"
+            viewBox="0 0 65 56"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+          >
+            <rect width="65" height="56" fill="url(#pattern0_238_119)" />
+            <defs>
+              <pattern
+                id="pattern0_238_119"
+                patternContentUnits="objectBoundingBox"
+                width="1"
+                height="1"
+              >
+                <use
+                  xlink:href="#image0_238_119"
+                  transform="matrix(0.00957265 0 0 0.0111111 0.0692308 0)"
+                />
+              </pattern>
+              <image
+                id="image0_238_119"
+                width="90"
+                height="90"
+                preserveAspectRatio="none"
+                xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFoAAABaCAYAAAA4qEECAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEVElEQVR4nO2cyWsUQRSHP0FNhKh4UNxAQYJ4EDeieFDUi3jwb9AcPPgXZPHgcnFEUSKI28mTKLiAiAgePXkQ19wEL1FwiYKgccm0lFZDCOnu6pqq7uru94MHQ0/Pq5ovL6/fq64eEIlEIpFIJBKJRCKRSCRqtuYCp4B3QOTIxoCW9u1jXBP/wanlEHA0zVqex03zH5xcRnI0zd57HjfNf3CKPFuSfPsPTgK6IAnogiSgC5KALkgCugTQQx02AXOBYYuqw3TcPP5NGqJCG5+pA/c48DffAnSPB/+t0BqfqQMOO4joIxagTcfN438sB2h1rnfVNUdHoTU+AhoBHUlEI6lDUsd/SY7WkothDauOoWnlY57Gx5maUHX0dND4OFMTQA/PENGmjY8zNQF01IEfZxLQCOhIIhpJHZI6/ktytJZcDKXq8COpOpCqI5Kqg+Crjl5gCdAFzAYWAauB3cAh4DLwAmhLRJMJ+bGD1LkCOEwBqlqO/glcBdZRMVUJ9HVgFRVVFUC/BfZQcYUO+iawkBooVNBtfWdkluH36NIVxQngDjAKjAO/dF5Xr1/r944Du/RnGg36D9BvOP8twBXgq8XcvugybzMNBN0GDhjMW8F56HCeD4CNDrkGD3ogY77zgBEd9a7n+hs4B3Q7Zhwc6BsZc12ruznfc36mO8tagn6TsX13G/CpgPnG9hHYWjfQk7oKSIP8rUDIsX1zCTsE0Ncy0kWRkTxTZPfWAfR3YGXKha+InGySs7urDvpCyjkjAUCO7WyVQU8Ca1LqZB8lXCel34aqgn6U8r7LZsSV3a/q428HU9rqIsBN6AZpqbYBvS6S1rVusoVT1uNvk8DihPeuFAR53wxjD2Z87pItmLIef3uScLzLcoHIBWSlZRmfHbdl5DtyknQ+4fgez/NRqWF/4qxguYGPnVQIdH/C8RMlRXKsIQM/x6oEekfC8bslQt6nz8vydbtKVceqhOOjhv/+06uFiYIgK3tlA6esqmNBwnGTdY2BHKBcQ47XP3KrrKpjTsLxtDo2NhXFJsB8QI795paPfBgZgMYDaKW9wA+D6mLquVETQX8y8Kmaiqwo9RHJzlJHCKBHDSMqC6QvyE4uhiGAvmvo1yQ1uEwXU+1WHUAfz+E7b2R3GsmxHa0D6N05/ZtGtotIji2p2UpVnt8eymtjFvPp0juIIoeR7SqSlX22LYF9/qzxSZsJ6W1akSPYLiEru2j5nf79dVqOI3usw9+T22w57oQu/ZZpG3QMue1721gZeuDxP83W7lFDrdc3RKO63JwNWecCABzbaWqsbuBpAJCf6808tVavXlsoC/KHlL0ntdPWEjc59tEw9enoKgqyaky201D16g2HviE/bVK6SLtAmvVU+imfZ3w9WlFVbdB74eKH5juxtm5GVO0uStAmvU1r3DIPX6xjW41HqXUVtYNIbW5R+y7UXRB1W0wtoypTr1/qRXt1jlrqtL4R/ReLf6/XLTdYyAAAAABJRU5ErkJggg=="
+              />
+            </defs>
+          </svg>
+          <span>DOCFLOW_NHT</span></a
+        >
+      </div>
+      <div class="search-box">
+        <input type="text" placeholder="Tìm kiếm..." />
+        <button><i class="fa-solid fa-magnifying-glass"></i></button>
+      </div>
+      <div class="nav-buttons">
+        <a href="{{ url_for('auth.books') }}"
+          ><button class="nav-btn">Sách</button></a
+        >
+        <button class="nav-btn">Tải xuống</button>
+        <i class="fas fa-bell"></i>
+        <img
+          src="{{ url_for('static', filename='img/images1.jpg') }}"
+          alt="User Avatar"
+          class="avatar"
+        />
+      </div>
+    </header>
+
+    <!-- Main content: Chính sách bảo mật -->
+    <main class="p-8 bg-white mx-auto max-w-4xl shadow-lg">
+      <h2 class="text-xl font-bold mb-4">Chính sách bảo mật</h2>
+      <p class="mb-4">1. Người chịu trách nhiệm và thông tin liên lạc</p>
+      <p class="mb-4">
+        Chúng tôi cung cấp một nền tảng trực tuyến thông qua đó người dùng có
+        thể trao đổi tài liệu học tập (sau đây gọi là "Trang web"). Chúng tôi xử
+        lý dữ liệu cá nhân theo những quy định của dịch vụ này. Chúng tôi tôn
+        trọng quyền riêng tư của bạn và xử lý dữ liệu cá nhân của bạn một cách
+        cẩn thận theo Quy định chung về quyền riêng tư dữ liệu ("GDPR").
+      </p>
+      <p class="mb-4">
+        Tuyển bố về quyền riêng tư này áp dụng cho việc xử lý dữ liệu cá nhân
+        của tất cả người truy cập Trang web.
+      </p>
+      <p class="mb-4">
+        Bộ điều khiển là Studoc BV ("Studoc"), có trụ sở tại Keizersgracht 424
+        Soud, 1016 GC Amsterdam (số đăng ký của Phòng Thương mại: 56829787). Nếu
+        bạn có thắc mắc hoặc khiếu nại về Tuyển bố về quyền riêng tư này, vui
+        lòng liên hệ privacy@studoc.com.
+      </p>
+      <p class="mb-4">
+        Chúng tôi có thể thay đổi tuyển bố về quyền riêng tư này theo thời gian.
+        Chúng tôi sẽ hiển thị các phiên bản đã sửa đổi, chúng tôi sẽ hiển thị rõ
+        ràng điều này trên các trang web của mình. Trên trang này, bạn luôn tìm
+        thấy phiên bản mới nhất của tuyển bố về quyền riêng tư của chúng tôi.
+      </p>
+      <p class="mb-4">2. Xử lý dữ liệu cá nhân</p>
+      <p class="mb-4">
+        Dữ liệu cá nhân là tất cả các thông tin có thể trực tiếp hoặc gián tiếp
+        liên quan đến bạn, bao gồm tên, địa chỉ email và khóa học, cũng như hồ
+        sơ mạng xã hội và địa chỉ IP của bạn.
+      </p>
+      <p class="mb-4">
+        Dưới đây là các loại dữ liệu cá nhân mà chúng tôi xử lý khi bạn sử dụng
+        Studoc hoặc truy cập Trang web của chúng tôi, ví dụ khi bạn tải lên tài
+        liệu lên Trang web của chúng tôi mà không cần tài khoản hoặc khi bạn
+        đăng ký tạo tài khoản để sử dụng các chức năng nâng cao của chúng tôi.
+        Một số dữ liệu cá nhân là bắt buộc phải cung cấp vì chúng cần thiết để
+        cung cấp dịch vụ của chúng tôi, dữ liệu khác là tùy chọn để điền vào.
+        Bạn luôn có thể từ chối cung cấp dữ liệu cá nhân của mình.
+      </p>
+      <p class="mb-4">
+        Sau đây, chúng tôi sẽ giải thích lý do vì chúng tôi xử lý dữ liệu cá
+        nhân của bạn và chúng tôi thực hiện việc này trên cơ sở pháp lý nào.
+      </p>
+      <p class="mb-4">
+        Trang web của chúng tôi yêu cầu bạn về quyền riêng tư này, nhưng chúng
+        tôi sẽ giải thích chi tiết về dữ liệu cá nhân của bạn, thời gian chúng
+        tôi lưu giữ dữ liệu cá nhân, những quyền bạn có liên quan đến dữ liệu cá
+        nhân của mình và cách bạn có thể thực hiện những quyền này.
+      </p>
+      <p class="mb-4">2.1. Sử dụng Trang web và Cookie</p>
+      <p class="mb-4">
+        Khi truy cập Trang web của chúng tôi, các tệp văn bản nhỏ, được gọi là
+        "cookie", được thông minh hoặc thiết bị khác của bạn. Các tệp này được
+        gọi là "cookie". Để biết thông tin chi tiết về việc sử dụng cookie và
+        các quyền tương tự, hãy xem tuyên bố về cookie của chúng tôi [liên kết].
+      </p>
+      <p class="mb-4">2.2. Tải lên tài liệu mà không cần tài khoản</p>
+      <p class="mb-4">
+        Nếu bạn làm điều này liên tục mà không cần tài khoản, chúng tôi sẽ xử lý
+        dữ liệu cá nhân của bạn. Ví dụ, dữ liệu của bạn có thể hiển thị trong
+        tệp của các tài liệu bạn đang tải lên, một tài liệu có thể liên quan với
+        nội dung của tài liệu đó thì chúng tôi có thể muốn chỉ ra rằng bạn có
+        thể chọn ẩn danh các tài liệu đã tải lên của mình bằng cách cung cấp các
+        thông tin cá nhân của bạn. Bạn có thể thay đổi tên của tài liệu và xóa
+        tên trong chính tài liệu.
+      </p>
+      <p class="mb-4">Chúng tôi xử lý các dữ liệu như sau đây của bạn:</p>
+      <ul class="list-disc list-inside mb-4">
+        <li>Địa chỉ IP</li>
+        <li>
+          Chi tiết về các tệp có trong nội dung tệp, đó là hoặc nội dung của tài
+          liệu
+        </li>
+        <li>Chi tiết về dữ liệu cá nhân này cho các mục đích sau:</li>
+        <li>Để cung cấp cho bạn quyền truy cập vào Studoc;</li>
+        <li>Để trao đổi tài liệu với các bạn sinh viên khác;</li>
+        <li>Để phân tích hành vi của người dùng;</li>
+      </ul>
+      <p class="mb-4">
+        Cơ sở pháp lý cho việc xử lý dữ liệu cá nhân của bạn cho mục đích (1) và
+        (2) là việc thực hiện thỏa thuận giữa (sử dụng Studoc) và (các hợp pháp
+        để thực hiện đúng các dịch vụ của chúng tôi). Cơ sở pháp lý cho mục đích
+        (3) là lợi ích hợp pháp của chúng tôi trong việc cung cấp dịch vụ của
+        chúng tôi và cải thiện dịch vụ của chúng tôi để phục vụ bạn tốt nhất có
+        thể và để bảo vệ Studoc hoặc người dùng.
+      </p>
+      <p class="mb-4">2.3. Tạo tài khoản</p>
+      <p class="mb-4">
+        Khi bạn tạo tài khoản, bạn phải xác nhận rằng bạn có thể sử dụng tài
+        khoản này bằng cách cung cấp các chi tiết như địa chỉ email của mình và
+        bằng cách tạo tài khoản và bạn cũng có thể đăng ký bằng tài khoản mạng
+        xã hội của mình. Trong trường hợp hợp đó, chúng tôi xử lý dữ liệu cá
+        nhân được liên kết với hồ sơ mạng xã hội của bạn, tùy thuộc vào cài đặt
+        quyền riêng tư bạn đã sử dụng ở đó.
+      </p>
+      <p class="mb-4">ĐIỀU KHOẢN....</p>
+      <p class="mb-4">COOKIES....</p>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-section">
+          <p>
+            <strong>LIÊN HỆ:</strong><br />
+            BLOG.<br />
+            VỀ CHÚNG TÔI.
+          </p>
+        </div>
+        <div class="footer-section">
+          <p>
+            <strong>TRỢ GIÚP:</strong><br />
+            CÂU HỎI THƯỜNG GẶP.<br />
+            PHÒNG TIN TỨC.
+          </p>
+        </div>
+        <div class="footer-section">
+          <p>
+            <strong>PHẢN HỒI:</strong><br />
+            ĐÁNH GIÁ.
+          </p>
+        </div>
+        <div class="footer-section social-icons">
+          <a href="#"><i class="fab fa-facebook"></i></a>
+          <a href="#"><i class="fab fa-tiktok"></i></a>
+          <a href="#"><i class="fab fa-google"></i></a>
+          <a href="#"><i class="fab fa-linkedin"></i></a>
+        </div>
+        <div class="footer-section">
+          <p>
+            <strong>TRỢ GIÚP:</strong><br />
+            CÂU HỎI THƯỜNG GẶP.<br />
+            PHÒNG TIN TỨC.
+          </p>
+        </div>
+        <div class="footer-section">
+          <p><strong>ĐIỀU KHOẢN:</strong><br /></p>
+          <a href="{{ url_for('auth.privacy_policy') }}"
+            ><p>CHÍNH SÁCH HỢP PHÁP.</p></a
+          >
+          <p>COOKIES.</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

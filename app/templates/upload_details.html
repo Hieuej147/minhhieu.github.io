@@ -1,0 +1,162 @@
+<!-- app/templates/upload_details.html -->
+{% extends "base.html" %}
+
+{% block title %}Upload Tài Liệu - Details{% endblock %}
+
+{% block extra_styles %}
+<style>
+  .upload-container {
+    width: 100%; /* Co giãn theo main */
+    max-width: 600px; /* Giới hạn tối đa, nhưng vẫn co giãn nếu main nhỏ hơn */
+    margin: 0 auto; /* Không cần margin lớn, vì main đã có padding */
+    padding: 20px;
+    background-color: #f0f7ff;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+
+  /* Progress bar */
+  .progress-bar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    position: relative;
+  }
+
+  .progress-bar div {
+    flex: 1;
+    text-align: center;
+    font-size: 16px;
+    color: #666;
+    position: relative;
+  }
+
+  .progress-bar div.active {
+    color: #007bff;
+  }
+
+  .progress-bar div.done {
+    color: #28a745;
+  }
+
+  .progress-bar div::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: #ddd;
+    z-index: -1;
+    transition: background-color 0.5s ease;
+  }
+
+  .progress-bar div:first-child::before {
+    left: 50%;
+  }
+
+  .progress-bar div:last-child::before {
+    right: 50%;
+  }
+
+  .progress-bar div.active::before {
+    background-color: #007bff;
+  }
+
+  .progress-bar div.done::before {
+    background-color: #28a745;
+  }
+
+  /* Form styles */
+  .details-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+  }
+
+  .details-form input,
+  .details-form select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .details-form button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .details-form button:hover {
+    background-color: #0056b3;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="upload-container">
+  <!-- Progress bar -->
+  <div class="progress-bar">
+    <div class="done">1. Upload</div>
+    <div class="active">2. Details</div>
+    <div>3. Done</div>
+  </div>
+
+  <!-- Form nhập thông tin chi tiết -->
+  <form class="details-form" method="POST" action="{{ url_for('document.upload_document_details') }}">
+    <input type="hidden" name="temp_file_path" value="{{ temp_file_path }}" />
+    <input type="hidden" name="file_type" value="{{ file_type }}" />
+    <input type="hidden" name="temp_thumbnail_path" value="{{ temp_thumbnail_path if temp_thumbnail_path else '' }}" />
+    <input type="text" name="title" placeholder="Tiêu đề" value="{{ title if title else '' }}" required />
+    <select name="category" required>
+      <option value="">Chọn danh mục</option>
+      <option value="Công nghệ" {% if category == 'Công nghệ' %}selected{% endif %}>Công nghệ</option>
+      <option value="Khoa học" {% if category == 'Khoa học' %}selected{% endif %}>Khoa học</option>
+      <option value="Kinh tế" {% if category == 'Kinh tế' %}selected{% endif %}>Kinh tế</option>
+      <option value="Văn học" {% if category == 'Văn học' %}selected{% endif %}>Văn học</option>
+      <!-- Thêm các danh mục khác nếu cần -->
+    </select>
+    <input type="number" name="pages" placeholder="Số trang" value="{{ pages if pages else '' }}" required />
+    <button type="submit">Done</button>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const progressSteps = document.querySelectorAll(".progress-bar div");
+    const form = document.querySelector(".details-form");
+
+    // Hiệu ứng khi vào trang Details
+    setTimeout(() => {
+      progressSteps[0].classList.remove("active");
+      progressSteps[0].classList.add("done");
+      progressSteps[1].classList.add("active");
+    }, 500);
+
+    // Khi bấm Done
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      progressSteps[1].classList.remove("active");
+      progressSteps[1].classList.add("done");
+      progressSteps[2].classList.add("active");
+
+      // Gửi form sau khi hiển thị hiệu ứng
+      setTimeout(() => {
+        form.submit();
+      }, 1000);
+    });
+  });
+</script>
+{% endblock %}

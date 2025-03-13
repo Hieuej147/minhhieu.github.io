@@ -1,0 +1,27 @@
+<!-- app/templates/upload_details_content.html -->
+<div class="upload-container">
+    <!-- Progress bar -->
+    <div class="progress-bar">
+      <div class="done">1. Upload</div>
+      <div class="active">2. Details</div>
+      <div>3. Done</div>
+    </div>
+  
+    <!-- Form nhập thông tin chi tiết -->
+    <form class="details-form" method="POST" action="{{ url_for('document.upload_document_details') }}">
+      <input type="hidden" name="temp_file_path" value="{{ temp_file_path }}" />
+      <input type="hidden" name="file_type" value="{{ file_type }}" />
+      <input type="hidden" name="temp_thumbnail_path" value="{{ temp_thumbnail_path if temp_thumbnail_path else '' }}" />
+      <input type="text" name="title" placeholder="Tiêu đề" value="{{ title if title else '' }}" required />
+      <select name="category" required>
+        <option value="">Chọn danh mục</option>
+        <option value="Công nghệ" {% if category == 'Công nghệ' %}selected{% endif %}>Công nghệ</option>
+        <option value="Khoa học" {% if category == 'Khoa học' %}selected{% endif %}>Khoa học</option>
+        <option value="Kinh tế" {% if category == 'Kinh tế' %}selected{% endif %}>Kinh tế</option>
+        <option value="Văn học" {% if category == 'Văn học' %}selected{% endif %}>Văn học</option>
+        <!-- Thêm các danh mục khác nếu cần -->
+      </select>
+      <input type="number" name="pages" placeholder="Số trang" value="{{ pages if pages else '' }}" required />
+      <button type="submit">Done</button>
+    </form>
+  </div>

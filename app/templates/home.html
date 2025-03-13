@@ -50,10 +50,10 @@
           <span class="logoname"><h1>DOCFLOW_NHT</h1></span>
         </div>
         <nav>
-          <span>BOOK</span>
+          <span>SÁCH</span>
           <span>BLOG</span>
-          <span>LANGUAGE</span>
-          <span>HELP</span>
+          <span>NGÔN NGỮ</span>
+          <span>TRỢ GIÚP</span>
         </nav>
         <div class="login-btn">
           <a href="/login" style="text-decoration: none; color: inherit">
@@ -66,17 +66,18 @@
     <section id="ss1">
       <div class="overlay-content">
         <h2 class="welcome-text">
-          WELCOME <br />
+          CHÀO MỪNG ĐẾN <br />
           DOCFLOW_NHT!
         </h2>
         <div class="search-container">
           <div class="search-wrapper">
             <input
               type="text"
+              id="searchInput"
               placeholder="Search for courses, books or documents"
               class="search-input"
             />
-            <span class="search-icon">
+            <span class="search-icon" onclick="search()">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -96,8 +97,8 @@
         </div>
         <!-- Thêm dòng chữ mới -->
         <h2 class="inspiration-text">
-          Where knowledge and <br />
-          dreams come together
+          Nơi kiến thức và <br />
+          ước mơ hội tụ
         </h2>
       </div>
       <div class="scroller">
@@ -166,4 +167,20 @@
     <script src="../static/js/scroller.js"></script>
     <script src="../static/js/header.js"></script>
   </body>
+  <script>
+    function search() {
+      const query = document.getElementById("searchInput").value;
+      if (query) {
+        window.location.href = `/search?query=${encodeURIComponent(query)}`;
+      }
+    }
+
+    document
+      .getElementById("searchInput")
+      .addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          search();
+        }
+      });
+  </script>
 </html>

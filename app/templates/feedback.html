@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DocFlow_NHT - Đánh giá</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/header.css') }}"
+    />
+    <style>
+      /* Flash messages */
+      .flash-messages {
+        position: fixed;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        width: 80%;
+        max-width: 500px;
+      }
+
+      .flash-message {
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        color: white;
+        text-align: center;
+      }
+
+      .flash-message.success {
+        background-color: #28a745;
+      }
+
+      .flash-message.error {
+        background-color: #dc3545;
+      }
+      * {
+        font-family: "Inter", sans-serif;
+      }
+
+      /* Override footer.css to ensure full width and proper positioning */
+      .footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #d7e9fc;
+        padding: 10px 5px;
+        border-top: 1px solid gray;
+        z-index: 100; /* Đảm bảo footer hiển thị trên nội dung */
+      }
+
+      .footer-container {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        flex-wrap: wrap;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .footer-section {
+        text-align: center;
+        margin: 5px;
+      }
+
+      .footer-section p {
+        margin: 0;
+        color: #333;
+        font-size: 12px;
+        line-height: 1.2;
+      }
+
+      .footer-section p strong {
+        font-size: 13px;
+      }
+
+      .social-icons a {
+        margin: 0 5px;
+        font-size: 16px;
+        color: #000;
+        text-decoration: none; /* Bỏ gạch dưới cho social icons */
+      }
+
+      .social-icons a:hover {
+        color: #007bff;
+      }
+
+      /* Loại bỏ gạch dưới cho các liên kết trong footer */
+      .footer-section a {
+        text-decoration: none; /* Bỏ gạch dưới mặc định */
+      }
+
+      .footer-section a:hover {
+        text-decoration: underline; /* Giữ gạch dưới khi hover (tùy chọn) */
+      }
+
+      /* Main content styling */
+      .main-content {
+        background-size: cover;
+        background-position: center;
+        min-height: calc(100vh - 120px); /* Trừ chiều cao header và footer */
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Căn giữa ngang */
+        justify-content: center; /* Căn giữa dọc */
+        padding: 20px 0; /* Chỉ padding trên và dưới */
+        position: relative;
+        box-sizing: border-box;
+      }
+
+      .feedback-container {
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 30px;
+        border-radius: 10px;
+        text-align: center;
+        width: 80%;
+        max-width: 1000px;
+        height: 80%;
+
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .thank-you-message {
+        font-size: 24px;
+        margin-bottom: 30px;
+      }
+
+      .rating-title {
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+
+      .stars {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 30px;
+      }
+
+      .star {
+        font-size: 36px;
+        color: #ffd700;
+      }
+
+      .star:nth-child(4) {
+        color: #ffa500;
+      }
+
+      .star:nth-child(5) {
+        color: #ff4500;
+      }
+
+      .feedback-title {
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+
+      .feedback-textarea {
+        width: 100%;
+        height: 120px;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        margin-bottom: 20px;
+        background-color: rgba(173, 216, 255, 0.3);
+        resize: vertical; /* Cho phép điều chỉnh chiều cao */
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .footer-container {
+          flex-direction: column;
+          padding: 5px;
+        }
+
+        .footer-section {
+          margin: 5px 0;
+        }
+
+        .social-icons a {
+          margin: 0 3px;
+          font-size: 14px;
+        }
+
+        .main-content {
+          min-height: calc(100vh - 100px);
+          padding: 10px 0;
+        }
+
+        .feedback-container {
+          width: 90%;
+          padding: 20px;
+        }
+
+        .thank-you-message {
+          font-size: 20px;
+        }
+
+        .rating-title,
+        .feedback-title {
+          font-size: 22px;
+        }
+
+        .star {
+          font-size: 28px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <a
+          href="{% if session.get('logged_in', False) %}{{ url_for('auth.profile', username=session.get('username', '')) }}{% else %}{{ url_for('auth.index') }}{% endif %}"
+        >
+          <svg
+            width="65"
+            height="56"
+            viewBox="0 0 65 56"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+          >
+            <rect width="65" height="56" fill="url(#pattern0_238_119)" />
+            <defs>
+              <pattern
+                id="pattern0_238_119"
+                patternContentUnits="objectBoundingBox"
+                width="1"
+                height="1"
+              >
+                <use
+                  xlink:href="#image0_238_119"
+                  transform="matrix(0.00957265 0 0 0.0111111 0.0692308 0)"
+                />
+              </pattern>
+              <image
+                id="image0_238_119"
+                width="90"
+                height="90"
+                preserveAspectRatio="none"
+                xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFoAAABaCAYAAAA4qEECAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEVElEQVR4nO2cyWsUQRSHP0FNhKh4UNxAQYJ4EDeieFDUi3jwb9AcPPgXZPHgcnFEUSKI28mTKLiAiAgePXkQ19wEL1FwiYKgccm0lFZDCOnu6pqq7uru94MHQ0/Pq5ovL6/fq64eEIlEIpFIJBKJRCKRSCRqtuYCp4B3QOTIxoCW9u1jXBP/wanlEHA0zVqex03zH5xcRnI0zd57HjfNf3CKPFuSfPsPTgK6IAnogiSgC5KALkgCugTQQx02AXOBYYuqw3TcPP5NGqJCG5+pA/c48DffAnSPB/+t0BqfqQMOO4joIxagTcfN438sB2h1rnfVNUdHoTU+AhoBHUlEI6lDUsd/SY7WkothDauOoWnlY57Gx5maUHX0dND4OFMTQA/PENGmjY8zNQF01IEfZxLQCOhIIhpJHZI6/ktytJZcDKXq8COpOpCqI5Kqg+Crjl5gCdAFzAYWAauB3cAh4DLwAmhLRJMJ+bGD1LkCOEwBqlqO/glcBdZRMVUJ9HVgFRVVFUC/BfZQcYUO+iawkBooVNBtfWdkluH36NIVxQngDjAKjAO/dF5Xr1/r944Du/RnGg36D9BvOP8twBXgq8XcvugybzMNBN0GDhjMW8F56HCeD4CNDrkGD3ogY77zgBEd9a7n+hs4B3Q7Zhwc6BsZc12ruznfc36mO8tagn6TsX13G/CpgPnG9hHYWjfQk7oKSIP8rUDIsX1zCTsE0Ncy0kWRkTxTZPfWAfR3YGXKha+InGySs7urDvpCyjkjAUCO7WyVQU8Ca1LqZB8lXCel34aqgn6U8r7LZsSV3a/q428HU9rqIsBN6AZpqbYBvS6S1rVusoVT1uNvk8DihPeuFAR53wxjD2Z87pItmLIef3uScLzLcoHIBWSlZRmfHbdl5DtyknQ+4fgez/NRqWF/4qxguYGPnVQIdH/C8RMlRXKsIQM/x6oEekfC8bslQt6nz8vydbtKVceqhOOjhv/+06uFiYIgK3tlA6esqmNBwnGTdY2BHKBcQ47XP3KrrKpjTsLxtDo2NhXFJsB8QI795paPfBgZgMYDaKW9wA+D6mLquVETQX8y8Kmaiqwo9RHJzlJHCKBHDSMqC6QvyE4uhiGAvmvo1yQ1uEwXU+1WHUAfz+E7b2R3GsmxHa0D6N05/ZtGtotIji2p2UpVnt8eymtjFvPp0juIIoeR7SqSlX22LYF9/qzxSZsJ6W1akSPYLiEru2j5nf79dVqOI3usw9+T22w57oQu/ZZpG3QMue1721gZeuDxP83W7lFDrdc3RKO63JwNWecCABzbaWqsbuBpAJCf6808tVavXlsoC/KHlL0ntdPWEjc59tEw9enoKgqyaky201D16g2HviE/bVK6SLtAmvVU+imfZ3w9WlFVbdB74eKH5juxtm5GVO0uStAmvU1r3DIPX6xjW41HqXUVtYNIbW5R+y7UXRB1W0wtoypTr1/qRXt1jlrqtL4R/ReLf6/XLTdYyAAAAABJRU5ErkJggg=="
+              />
+            </defs>
+          </svg>
+          <span>DOCFLOW_NHT</span></a
+        >
+      </div>
+      <div class="search-box">
+        <input type="text" placeholder="Tìm kiếm..." />
+        <button><i class="fa-solid fa-magnifying-glass"></i></button>
+      </div>
+      <div class="nav-buttons">
+        <a href="{{ url_for('auth.books') }}"
+          ><button class="nav-btn">Sách</button></a
+        >
+        <button class="nav-btn">Tải xuống</button>
+        <i class="fas fa-bell"></i>
+        <img
+          src="{{ url_for('static', filename='img/images1.jpg') }}"
+          alt="User Avatar"
+          class="avatar"
+        />
+      </div>
+    </header>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+      <div class="flash-message {{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
+
+    <!-- Main content: Phản hồi -->
+    <main class="main-content">
+      <div class="feedback-container">
+        <p class="thank-you-message">
+          Cảm ơn bạn vì đã đưa ra đánh giá, chúng tôi rất vui khi nhận được phản
+          hồi từ bạn!
+        </p>
+        <h2 class="rating-title">ĐÁNH GIÁ</h2>
+        <div class="stars">
+          <i class="fas fa-star star"></i>
+          <i class="fas fa-star star"></i>
+          <i class="fas fa-star star"></i>
+          <i class="fas fa-star star"></i>
+          <i class="fas fa-star star"></i>
+        </div>
+        <h2 class="feedback-title">PHẢN HỒI</h2>
+        <div>
+          <textarea
+            class="feedback-textarea"
+            placeholder="Write your feedback here..."
+            rows="4"
+          ></textarea>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-section">
+          <p>
+            <strong>LIÊN HỆ:</strong><br />
+            BLOG.<br />
+            VỀ CHÚNG TÔI.
+          </p>
+        </div>
+        <div class="footer-section">
+          <p>
+            <strong>TRỢ GIÚP:</strong><br />
+            CÂU HỎI THƯỜNG GẶP.<br />
+            PHÒNG TIN TỨC.
+          </p>
+        </div>
+        <div class="footer-section">
+          <p>
+            <strong>PHẢN HỒI:</strong><br />
+            ĐÁNH GIÁ.
+          </p>
+        </div>
+        <div class="footer-section social-icons">
+          <a href="#"><i class="fab fa-facebook"></i></a>
+          <a href="#"><i class="fab fa-tiktok"></i></a>
+          <a href="#"><i class="fab fa-google"></i></a>
+          <a href="#"><i class="fab fa-linkedin"></i></a>
+        </div>
+        <div class="footer-section">
+          <p>
+            <strong>TRỢ GIÚP:</strong><br />
+            CÂU HỎI THƯỜNG GẶP.<br />
+            PHÒNG TIN TỨC.
+          </p>
+        </div>
+        <div class="footer-section">
+          <p><strong>ĐIỀU KHOẢN:</strong><br /></p>
+          <a href="{{ url_for('auth.privacy_policy') }}"
+            ><p>CHÍNH SÁCH HỢP PHÁP.</p></a
+          >
+          <a href="{{ url_for('auth.privacy_policy') }}"><p>COOKIES.</p></a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const flashMessages = document.querySelectorAll(".flash-message");
+        flashMessages.forEach((message) => {
+          setTimeout(() => {
+            message.style.opacity = "0";
+            setTimeout(() => message.remove(), 300);
+          }, 5000);
+        });
+      });
+    </script>
+  </body>
+</html>

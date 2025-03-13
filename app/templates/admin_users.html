@@ -1,250 +1,267 @@
+<!-- app/templates/admin_users.htmlhtml -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quản lý tài khoản người dùng - DOCFLOW_NHT</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Arial', sans-serif;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý tài khoản người dùng - DOCFLOW_NHT</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Arial", sans-serif;
+      }
 
-    body {
-      background: linear-gradient(90deg, #e2e2e2, #c9d6ff);
-    }
+      body {
+        background: linear-gradient(90deg, #e2e2e2, #c9d6ff);
+      }
 
-    /* Header */
-    .header {
-      background-color: #1a73e8;
-      color: white;
-      padding: 15px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
+      /* Header */
+      .header {
+        background-color: #1a73e8;
+        color: white;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
 
-    .header h1 {
-      font-size: 24px;
-    }
+      .header h1 {
+        font-size: 24px;
+      }
 
-    .header .actions a {
-      color: white;
-      text-decoration: none;
-      padding: 8px 15px;
-      border-radius: 5px;
-      background-color: #ff851b;
-      transition: background-color 0.3s;
-    }
+      .header .actions a {
+        color: white;
+        text-decoration: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        background-color: #ff851b;
+        transition: background-color 0.3s;
+      }
 
-    .header .actions a:hover {
-      background-color: #e67617;
-    }
+      .header .actions a:hover {
+        background-color: #e67617;
+      }
 
-    /* Main content */
-    .admin-users-container {
-      max-width: 1200px;
-      margin: 20px auto;
-      padding: 20px;
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
+      /* Main content */
+      .admin-users-container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
 
-    .admin-users-container h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #333;
-    }
+      .admin-users-container h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+      }
 
-    /* Flash messages */
-    .flash-messages {
-      position: fixed;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1000;
-      width: 80%;
-      max-width: 500px;
-    }
+      /* Flash messages */
+      .flash-messages {
+        position: fixed;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        width: 80%;
+        max-width: 500px;
+      }
 
-    .flash-message {
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 5px;
-      color: white;
-      text-align: center;
-    }
+      .flash-message {
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        color: white;
+        text-align: center;
+      }
 
-    .flash-message.success {
-      background-color: #28a745;
-    }
+      .flash-message.success {
+        background-color: #28a745;
+      }
 
-    .flash-message.error {
-      background-color: #dc3545;
-    }
+      .flash-message.error {
+        background-color: #dc3545;
+      }
 
-    /* Users table */
-    .users-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
+      /* Users table */
+      .users-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
 
-    .users-table th,
-    .users-table td {
-      padding: 12px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
+      .users-table th,
+      .users-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
 
-    .users-table th {
-      background-color: #f4f4f4;
-      font-weight: 600;
-      color: #333;
-    }
+      .users-table th {
+        background-color: #f4f4f4;
+        font-weight: 600;
+        color: #333;
+      }
 
-    .users-table td {
-      vertical-align: middle;
-    }
+      .users-table td {
+        vertical-align: middle;
+      }
 
-    .btn {
-      padding: 8px 16px;
-      border-radius: 5px;
-      text-decoration: none;
-      font-weight: 500;
-      cursor: pointer;
-      border: none;
-    }
+      .btn {
+        padding: 8px 16px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+      }
 
-    .btn-edit {
-      background-color: #007bff;
-      color: white;
-      margin-right: 10px;
-    }
+      .btn-edit {
+        background-color: #007bff;
+        color: white;
+        margin-right: 10px;
+      }
 
-    .btn-delete {
-      background-color: #dc3545;
-      color: white;
-    }
+      .btn-delete {
+        background-color: #dc3545;
+        color: white;
+      }
 
-    /* Pagination */
-    .pagination {
-      text-align: center;
-      margin-top: 20px;
-    }
+      /* Pagination */
+      .pagination {
+        text-align: center;
+        margin-top: 20px;
+      }
 
-    .btn-page {
-      background-color: #007bff;
-      color: white;
-      margin: 0 5px;
-      padding: 8px 16px;
-      border-radius: 5px;
-      text-decoration: none;
-    }
+      .btn-page {
+        background-color: #007bff;
+        color: white;
+        margin: 0 5px;
+        padding: 8px 16px;
+        border-radius: 5px;
+        text-decoration: none;
+      }
 
-    /* Footer */
-    .footer {
-      background-color: #1a73e8;
-      color: white;
-      text-align: center;
-      padding: 10px 0;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-    }
-  </style>
-</head>
-<body>
-  <!-- Header -->
-  <div class="header">
-    <h1>DOCFLOW_NHT - Quản lý người dùng</h1>
-    <div class="actions">
-      <a href="{{ url_for('auth.dashboard') }}">Quay lại Dashboard</a>
-    </div>
-  </div>
-
-  <!-- Flash messages -->
-  {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      <div class="flash-messages">
-        {% for category, message in messages %}
-          <div class="flash-message {{ category }}">{{ message }}</div>
-        {% endfor %}
+      /* Footer */
+      .footer {
+        background-color: #1a73e8;
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <div class="header">
+      <h1>DOCFLOW_NHT - Quản lý người dùng</h1>
+      <div class="actions">
+        <a href="{{ url_for('auth.dashboard') }}">Quay lại Dashboard</a>
       </div>
-    {% endif %}
-  {% endwith %}
+    </div>
 
-  <!-- Main content -->
-  <div class="admin-users-container">
-    <h2>Danh sách người dùng</h2>
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+      <div class="flash-message {{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
 
-    <!-- Bảng danh sách người dùng -->
-    <table class="users-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Username</th>
-          <th>Email</th>
-          <th>Hành động</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% if users.items %}
-          {% for user in users.items %}
-            <tr>
-              <td>{{ user.id }}</td>
-              <td>{{ user.username }}</td>
-              <td>{{ user.email }}</td>
-              <td>
-                <a href="{{ url_for('auth.edit_user', user_id=user.id) }}" class="btn btn-edit">Chỉnh sửa</a>
-                <form action="{{ url_for('auth.delete_user', user_id=user.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa tài khoản này?');">
-                  <button type="submit" class="btn btn-delete">Xóa</button>
-                </form>
-              </td>
-            </tr>
-          {% endfor %}
-        {% else %}
+    <!-- Main content -->
+    <div class="admin-users-container">
+      <h2>Danh sách người dùng</h2>
+
+      <!-- Bảng danh sách người dùng -->
+      <table class="users-table">
+        <thead>
           <tr>
-            <td colspan="4" style="text-align: center;">Không có người dùng nào.</td>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Hành động</th>
           </tr>
-        {% endif %}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {% if users.items %} {% for user in users.items %}
+          <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+              <a
+                href="{{ url_for('auth.edit_user', user_id=user.id) }}"
+                class="btn btn-edit"
+                >Chỉnh sửa</a
+              >
+              <form
+                action="{{ url_for('auth.delete_user', user_id=user.id) }}"
+                method="POST"
+                style="display: inline"
+                onsubmit="return confirm('Bạn có chắc chắn muốn xóa tài khoản này?');"
+              >
+                <button type="submit" class="btn btn-delete">Xóa</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %} {% else %}
+          <tr>
+            <td colspan="4" style="text-align: center">
+              Không có người dùng nào.
+            </td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
 
-    <!-- Phân trang -->
-    {% if users.pages > 1 %}
+      <!-- Phân trang -->
+      {% if users.pages > 1 %}
       <div class="pagination">
         {% if users.has_prev %}
-          <a href="{{ url_for('auth.admin_users', page=users.prev_num) }}" class="btn btn-page">« Trang trước</a>
+        <a
+          href="{{ url_for('auth.admin_users', page=users.prev_num) }}"
+          class="btn btn-page"
+          >« Trang trước</a
+        >
         {% endif %}
         <span>Trang {{ users.page }} / {{ users.pages }}</span>
         {% if users.has_next %}
-          <a href="{{ url_for('auth.admin_users', page=users.next_num) }}" class="btn btn-page">Trang sau »</a>
+        <a
+          href="{{ url_for('auth.admin_users', page=users.next_num) }}"
+          class="btn btn-page"
+          >Trang sau »</a
+        >
         {% endif %}
       </div>
-    {% endif %}
-  </div>
+      {% endif %}
+    </div>
 
-  <!-- Footer -->
-  <div class="footer">
-    <p>&copy; 2025 DOCFLOW_NHT. All rights reserved.</p>
-  </div>
+    <!-- Footer -->
+    <div class="footer">
+      <p>&copy; 2025 DOCFLOW_NHT. All rights reserved.</p>
+    </div>
 
-  <!-- JavaScript để tự động ẩn flash messages -->
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const flashMessages = document.querySelectorAll(".flash-message");
-      flashMessages.forEach((message) => {
-        setTimeout(() => {
-          message.style.opacity = "0";
-          setTimeout(() => message.remove(), 300);
-        }, 3000);
+    <!-- JavaScript để tự động ẩn flash messages -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const flashMessages = document.querySelectorAll(".flash-message");
+        flashMessages.forEach((message) => {
+          setTimeout(() => {
+            message.style.opacity = "0";
+            setTimeout(() => message.remove(), 300);
+          }, 3000);
+        });
       });
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>

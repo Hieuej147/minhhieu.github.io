@@ -203,7 +203,7 @@
         <a href="{{ url_for('auth.admin_users') }}" class="btn-admin"
           >Quản lý tài khoản người dùng</a
         >
-        <a href="{{ url_for('auth.upload_document') }}" class="btn-admin"
+        <a href="{{ url_for('document.upload_document') }}" class="btn-admin"
           >Upload Document</a
         >
       </div>
@@ -217,7 +217,9 @@
           <div class="document-list">
             {% for doc in docs %}
             <div class="document-card">
-              <a href="{{ url_for('auth.view_document', document_id=doc.id) }}">
+              <a
+                href="{{ url_for('document.view_document', document_id=doc.id) }}"
+              >
                 {% if doc.file_path %}
                 <img
                   src="{{ url_for('static', filename='uploads/' + doc.file_path.split('/')[-1]) }}"

@@ -1,0 +1,204 @@
+{% extends "base.html" %} {% block title %}Tài liệu yêu thích & đã tải về - {{
+session.get('username', 'Guest') }}{% endblock %} {% block extra_styles %}
+<script src="https://cdn.tailwindcss.com"></script>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+/>
+<link
+  href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+  rel="stylesheet"
+/>
+<style>
+  body {
+    background-image: url("https://img.lovepik.com/bg/20240429/Stunning-3D-Render-Mesmerizing-Blue-Books-on-a-Background-of_8464637_wh860.jpg!/fw/860");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+  #main-content {
+    margin-left: 250px;
+    padding: 20px;
+  }
+  .document-row {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  .document-row:hover {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  .document-info {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+  }
+  .document-info i {
+    font-size: 20px;
+    margin-right: 12px;
+    color: #4b5563;
+  }
+  .document-details {
+    flex-grow: 1;
+  }
+  .document-details p {
+    margin: 0;
+  }
+  .favorite-button {
+    background-color: #34d399;
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s ease;
+  }
+  .favorite-button:hover {
+    background-color: #22c55e;
+  }
+  .favorite-button.active {
+    background-color: #ff4444;
+  }
+  #pdf-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+  }
+  #pdf-overlay.active {
+    display: block;
+  }
+  #pdf-viewer {
+    width: 80%;
+    height: 80%;
+    margin: 5% auto;
+    border: none;
+  }
+</style>
+{% endblock %} {% block content %}
+<div
+  class="bg-blue-100 bg-opacity-80 rounded-lg p-4 w-full max-w-4xl mx-auto mt-10 ml-64"
+>
+  <div class="flex gap-6 justify-between">
+    <!-- Tài liệu yêu thích -->
+    <div class="w-1/2 p-2 overflow-y-auto" style="max-height: 500px">
+      <h2 class="text-xl font-bold mb-4 text-center text-blue-800">
+        Tài liệu yêu thích
+      </h2>
+      <div id="favorite-list" class="space-y-2">
+        {% if favorite_docs %} {% for doc in favorite_docs %}
+        <div class="document-row">
+          <a
+            href="#"
+            class="document-info flex-grow"
+            onclick="openPDF('{{ url_for('static', filename=doc.document.file_path) }}', '{{ doc.document.title }}'); return false;"
+          >
+            <i class="fa-solid fa-file-pdf"></i>
+            <div class="document-details">
+              <p class="text-sm font-semibold text-gray-800">
+                {{ doc.document.title }}
+              </p>
+            </div>
+          </a>
+          <div class="favorite-button active">
+            <form
+              method="POST"
+              action="{{ url_for('auth.toggle_favorite', document_id=doc.document.id) }}"
+            >
+              <button
+                type="submit"
+                class="bg-transparent border-none p-0 m-0 cursor-pointer"
+              >
+                <span>-</span>
+                <!-- Thay bằng ký tự '-' -->
+              </button>
+            </form>
+          </div>
+        </div>
+        {% endfor %} {% else %}
+        <p class="text-center text-gray-600">Chưa có tài liệu yêu thích nào.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Tài liệu đã tải về -->
+    <div
+      class="w-1/2 p-2 border-l-2 border-blue-300 overflow-y-auto"
+      style="max-height: 500px"
+    >
+      <h2 class="text-xl font-bold mb-4 text-center text-blue-800">
+        Tài liệu đã tải về
+      </h2>
+      <div id="downloaded-list" class="space-y-2">
+        {% if downloaded_docs %} {% for doc in downloaded_docs %}
+        <div class="document-row">
+          <div class="document-info">
+            <i class="fa-solid fa-file-pdf"></i>
+            <div class="document-details">
+              <p class="text-sm font-semibold text-gray-800">
+                {{ doc.document.title }}
+              </p>
+              <p class="text-xs text-gray-600">
+                {{ doc.downloaded_at.strftime('%d/%m/%Y %H:%M:%S') }}
+              </p>
+            </div>
+          </div>
+          <!-- Bỏ nút favorite-button -->
+        </div>
+        {% endfor %} {% else %}
+        <p class="text-center text-gray-600">
+          Chưa có tài liệu nào được tải về.
+        </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Overlay và iframe để xem PDF -->
+<div id="pdf-overlay" class="hidden">
+  <button
+    id="close-pdf"
+    class="text-white bg-red-500 p-2 rounded absolute top-4 right-4"
+  >
+    X
+  </button>
+  <iframe id="pdf-viewer" src="" frameborder="0"></iframe>
+</div>
+{% endblock %} {% block extra_scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  function openPDF(url, title) {
+    const pdfViewer = document.getElementById("pdf-viewer");
+    const overlay = document.getElementById("pdf-overlay");
+    pdfViewer.src = url;
+    overlay.classList.add("active");
+    document.title = title;
+  }
+
+  document.getElementById("close-pdf").addEventListener("click", function () {
+    const overlay = document.getElementById("pdf-overlay");
+    const pdfViewer = document.getElementById("pdf-viewer");
+    overlay.classList.remove("active");
+    pdfViewer.src = "";
+    document.title =
+      "Tài liệu yêu thích & đã tải về - {{ session.get('username', 'Guest') }}";
+  });
+</script>
+{% endblock %}

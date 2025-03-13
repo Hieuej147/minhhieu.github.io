@@ -1,6 +1,7 @@
 # app/models/document.py
 from app import db
 class Document(db.Model):
+    __tablename__ = 'documents'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
     category = db.Column(db.String(100), nullable=False)
@@ -8,7 +9,7 @@ class Document(db.Model):
     file_path = db.Column(db.String(200))
     thumbnail_path = db.Column(db.String(200))  # Thêm trường thumbnail_path
     pages = db.Column(db.Integer, default=0)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     user = db.relationship('User', backref=db.backref('documents', lazy=True))
 
     def __init__(self, title, category, file_type, user_id, file_path=None, thumbnail_path=None, pages=0):

@@ -1,0 +1,218 @@
+/* app/static/css/chat.css */
+main {
+  margin-left: 256px; /* Chừa chỗ cho sidebar */
+  margin-top: 80px; /* Chừa chỗ cho header */
+  padding: 0;
+  flex: 1;
+  display: flex;
+  min-height: calc(100vh - 80px - 50px); /* Trừ chiều cao header và footer */
+  transition: margin-left 0.3s;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.sidebar.active ~ main {
+  margin-left: 92px; /* Khi sidebar thu gọn */
+}
+
+.chat-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  background-color: #f5f5f5;
+}
+
+/* Danh sách nhóm chat (bên trái) */
+.chat-list {
+  width: 250px;
+  background-color: #fff;
+  border-right: 1px solid #ddd;
+  overflow-y: auto;
+  padding: 10px;
+  height: 500px;
+}
+
+.chat-list .user-info {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.chat-list .user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.chat-list .user-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-list .user-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.chat-list .user-location {
+  font-size: 12px;
+  color: #666;
+}
+
+.chat-list h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Khoảng cách giữa icon và tiêu đề */
+}
+
+.chat-list h3 i {
+  font-size: 16px;
+  color: #333;
+}
+
+.chat-list .group {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.chat-list .group:hover {
+  background-color: #e6f0fa;
+}
+
+.chat-list .group.active {
+  background-color: #1a73e8;
+  color: white;
+}
+
+.chat-list .group img {
+  width: 40px;
+  height: 40px;
+  border-radius: 5px; /* Thay đổi thành hình chữ nhật giống ảnh */
+  margin-right: 10px;
+}
+
+.chat-list .group span {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Khu vực chat chính (bên phải) */
+.chat-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+}
+
+.chat-header {
+  background-color: #e6f0fa;
+  padding: 10px 20px;
+  border-bottom: 1px solid #ddd;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto; /* Thanh cuộn dọc */
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-height: 500px; /* Thêm max-height để kích hoạt thanh cuộn */
+}
+
+.message {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: 70%;
+}
+
+.message img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.message-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.message-content .sender {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.message-content .text {
+  background-color: #f1f0f0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #333;
+  word-wrap: break-word;
+}
+
+/* Tin nhắn của người dùng hiện tại */
+.message.my-message {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.message.my-message .text {
+  background-color: #1a73e8;
+  color: white;
+}
+
+.message.my-message .sender {
+  text-align: right;
+}
+
+/* Input gửi tin nhắn */
+.chat-input {
+  padding: 10px 20px;
+  border-top: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #fff;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 14px;
+  outline: none;
+}
+
+.chat-input i {
+  font-size: 20px;
+  color: #666;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.chat-input i:hover {
+  color: #1a73e8;
+}
+
+.chat-input .send-btn {
+  color: #1a73e8;
+}

@@ -1,0 +1,148 @@
+{% extends "base.html" %} {% block title %}Chat - DOCFLOW_NHT{% endblock %} {%
+block extra_styles %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/chat.css') }}"
+/>
+{% endblock %} {% block content %}
+<div class="chat-container">
+  <!-- Danh sách nhóm chat (bên trái) -->
+  <div class="chat-list">
+    <!-- Thông tin người dùng -->
+    <div class="user-info">
+      <img
+        src="{{ url_for('static', filename='img/images1.jpg') }}"
+        alt="User Avatar"
+        class="user-avatar"
+      />
+      <div class="user-details">
+        <span class="user-name">User: {{ username }}</span>
+        <span class="user-location">VIETNAM. Phu Yen.</span>
+      </div>
+    </div>
+    <h3><i class="fa-solid fa-user-group"></i> TẠO NHÓM</h3>
+    <h3><i class="fas fa-address-book"></i> DANH BẠ</h3>
+    <div class="group">
+      <img
+        src="{{ url_for('static', filename='img/image13.jpg') }}"
+        alt="Group Icon"
+      />
+      <span>ThanhBc</span>
+    </div>
+    <h3><i class="fas fa-store"></i> CỬA HÀNG ICON</h3>
+    <h3><i class="fas fa-users"></i> NHÓM CỦA TÔI</h3>
+    <div class="group">
+      <img
+        src="{{ url_for('static', filename='img/images6.jpg') }}"
+        alt="Group Icon"
+      />
+      <span>Group TOEIC...</span>
+    </div>
+    <div class="group">
+      <img
+        src="{{ url_for('static', filename='img/images5.jpg') }}"
+        alt="Group Icon"
+      />
+      <span>Group y tế...</span>
+    </div>
+    <div class="group active">
+      <img
+        src="{{ url_for('static', filename='img/image10.jpg') }}"
+        alt="Group Icon"
+      />
+      <span>Group...</span>
+    </div>
+  </div>
+
+  <!-- Khu vực chat chính (bên phải) -->
+  <div class="chat-area">
+    <div class="chat-header">GROUP...</div>
+    <div class="chat-messages" id="chat-messages">
+      <!-- Tin nhắn sẽ được thêm động bởi JavaScript -->
+    </div>
+    <div class="chat-input">
+      <i class="fas fa-paperclip"></i>
+      <i class="fas fa-smile"></i>
+      <input type="text" id="message-input" placeholder="Nhập tin nhắn..." />
+      <i class="fas fa-paper-plane send-btn" onclick="sendMessage()"></i>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block extra_scripts %}
+<script>
+  let isSending = false; // Biến để kiểm soát trạng thái gửi
+
+  function addMessage(message) {
+    const messagesDiv = document.getElementById("chat-messages");
+    const messageDiv = document.createElement("div");
+    messageDiv.className = `message ${message.is_bot ? "bot" : "my-message"}`;
+    const avatarSrc = message.is_bot
+      ? "{{ url_for('static', filename='img/iconbot.jpg') }}"
+      : "{{ url_for('static', filename='img/images1.jpg') }}";
+    messageDiv.innerHTML = `
+      <img src="${avatarSrc}" alt="Avatar">
+      <div class="message-content">
+        <div class="sender">${message.username}</div>
+        <div class="text">${message.content}</div>
+      </div>
+    `;
+    messagesDiv.appendChild(messageDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight; // Tự động cuộn xuống khi có tin nhắn mới
+  }
+
+  function sendMessage() {
+    if (isSending) return; // Ngăn gọi lại nếu đang gửi
+
+    const input = document.getElementById("message-input");
+    const message = input.value.trim();
+
+    if (message) {
+      isSending = true;
+
+      const userMessage = {
+        username: "{{ username }}",
+        content: message,
+        is_bot: false,
+      };
+      addMessage(userMessage);
+
+      fetch("/chat/send_message", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: message }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Response from server:", data); // Debug response
+          if (data.status === "success") {
+            // Chỉ thêm tin nhắn bot
+            const botMessage = data.messages.find((msg) => msg.is_bot);
+            if (botMessage) {
+              addMessage({
+                username: botMessage.username,
+                content: botMessage.content,
+                is_bot: true,
+              });
+            }
+          } else {
+            alert("Lỗi: " + data.message);
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert("Lỗi kết nối đến server");
+        })
+        .finally(() => {
+          input.value = ""; // Reset input trong mọi trường hợp
+          isSending = false;
+        });
+    }
+  }
+
+  document.getElementById("message-input").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") sendMessage();
+  });
+</script>
+{% endblock %}

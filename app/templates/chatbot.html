@@ -1,0 +1,261 @@
+{% extends "base.html" %} {% block title %}AI Assistant - DOCFLOW_NHT{% endblock
+%} {% block content %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/chatbot.css') }}"
+/>
+<div class="chat-container">
+  <!-- Danh sách nguồn (bên trái) -->
+  <div class="chat-list">
+    <!-- Thông tin người dùng -->
+    <div class="user-info">
+      <img
+        src="{{ url_for('static', filename='img/images1.jpg') }}"
+        alt="User Avatar"
+        class="user-avatar"
+      />
+      <div class="user-details">
+        <span class="user-name">User: {{ username }}</span>
+        <span class="user-location">VIETNAM. Phu Yen.</span>
+      </div>
+    </div>
+    <h3><i class="fas fa-plus"></i> Thêm nguồn</h3>
+    <button
+      class="add-source-btn"
+      onclick="document.getElementById('uploadInput').click()"
+    >
+      <i class="fas fa-upload"></i> Thêm nguồn
+    </button>
+    <input
+      type="file"
+      id="uploadInput"
+      style="display: none"
+      accept=".pdf,.txt,.md"
+      onchange="uploadFile(event)"
+    />
+    <div id="source-list">
+      <!-- Danh sách tài liệu ban đầu trống -->
+    </div>
+  </div>
+
+  <!-- Khu vực chat (bên phải) -->
+  <div class="chat-area">
+    <div class="chat-header">Chào mừng đến với DocFlow_NHT</div>
+    <div class="chat-messages" id="chat-messages">
+      <!-- Tin nhắn chào mừng ban đầu -->
+      <div class="message bot">
+        <img
+          src="{{ url_for('static', filename='img/iconbot.jpg') }}"
+          alt="Bot Avatar"
+        />
+        <div class="message-content">
+          <div class="sender">Grok 3</div>
+          <div class="text">
+            Tôi là Grok 3, trợ lý AI của bạn. Vui lòng upload tài liệu hoặc đặt
+            câu hỏi để tôi hỗ trợ bạn nhé!
+          </div>
+        </div>
+      </div>
+      <!-- Hiển thị lịch sử trò chuyện nếu có -->
+      {% if session['chat_history'] %} {% for msg in session['chat_history'] %}
+      <div
+        class="message {{ 'bot' if msg['role'] == 'assistant' else 'my-message' }}"
+      >
+        <img
+          src="{{ url_for('static', filename='img/iconbot.jpg') if msg['role'] == 'assistant' else url_for('static', filename='img/images1.jpg') }}"
+          alt="Avatar"
+        />
+        <div class="message-content">
+          <div class="sender">
+            {{ 'Grok 3' if msg['role'] == 'assistant' else username }}
+          </div>
+          <div class="text">{{ msg['content'] }}</div>
+        </div>
+      </div>
+      {% endfor %} {% endif %}
+    </div>
+    <div class="chat-input">
+      <i class="fas fa-paperclip"></i>
+      <i class="fas fa-smile"></i>
+      <input type="text" id="message-input" placeholder="Nhập tin nhắn..." />
+      <i class="fas fa-paper-plane send-btn" onclick="sendMessage()"></i>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block extra_scripts %}
+<script>
+  let isSending = false;
+
+  function addMessage(message, isBot) {
+    const messagesDiv = document.getElementById("chat-messages");
+    const messageDiv = document.createElement("div");
+    messageDiv.className = `message ${isBot ? "bot" : "my-message"}`;
+    const avatarSrc = isBot
+      ? "{{ url_for('static', filename='img/iconbot.jpg') }}"
+      : "{{ url_for('static', filename='img/images1.jpg') }}";
+    messageDiv.innerHTML = `
+      <img src="${avatarSrc}" alt="Avatar">
+      <div class="message-content">
+        <div class="sender">${
+          message.username || (isBot ? "Grok 3" : "{{ username }}")
+        }</div>
+        <div class="text">${message.content}</div>
+      </div>
+    `;
+    messagesDiv.appendChild(messageDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  }
+
+  function sendMessage() {
+    if (isSending) return;
+    const input = document.getElementById("message-input");
+    const message = input.value.trim();
+    if (message) {
+      isSending = true;
+      addMessage({ content: message, username: "{{ username }}" }, false);
+      input.value = "";
+
+      fetch("/ai-assistant/summarize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: message }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(
+              `Yêu cầu thất bại: ${response.status} ${response.statusText}`
+            );
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (data.status === "success") {
+            addMessage({ content: data.summary, username: "Grok 3" }, true);
+          } else {
+            addMessage(
+              { content: "Lỗi: " + data.message, username: "Grok 3" },
+              true
+            );
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          addMessage(
+            { content: "Lỗi kết nối đến server", username: "Grok 3" },
+            true
+          );
+        })
+        .finally(() => (isSending = false));
+    }
+  }
+
+  document.getElementById("message-input").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") sendMessage();
+  });
+
+  // Xử lý upload tài liệu
+  function uploadFile(event) {
+    const fileInput = event.target;
+    const formData = new FormData();
+    formData.append("file", fileInput.files[0]);
+
+    // Hiển thị thông báo "Đang xử lý file..."
+    addMessage({ content: "Đang xử lý file...", username: "Grok 3" }, true);
+
+    fetch("/ai-assistant/upload", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            `Yêu cầu thất bại: ${response.status} ${response.statusText}`
+          );
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Phản hồi từ /upload:", data);
+        if (data.status === "success") {
+          addSourceToList(data.filename);
+          alert("Tải lên thành công!");
+          fileInput.value = ""; // Reset input
+          // Tự động tóm tắt sau khi upload
+          selectSource(data.filename);
+        } else {
+          addMessage(
+            { content: "Lỗi: " + data.message, username: "Grok 3" },
+            true
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Lỗi khi upload:", error);
+        addMessage(
+          {
+            content: "Lỗi khi upload tài liệu: " + error.message,
+            username: "Grok 3",
+          },
+          true
+        );
+      });
+  }
+
+  function addSourceToList(filename) {
+    const sourceList = document.getElementById("source-list");
+    if (!sourceList) {
+      console.error("Element #source-list not found");
+      return;
+    }
+    const sourceItem = document.createElement("div");
+    sourceItem.className = "source-item";
+    sourceItem.innerHTML = `<i class="fas fa-file-pdf text-danger"></i> ${filename}`;
+    sourceItem.onclick = () => selectSource(filename);
+    sourceList.appendChild(sourceItem);
+    sourceList.scrollTop = sourceList.scrollHeight;
+  }
+
+  function selectSource(filename) {
+    fetch("/ai-assistant/summarize", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ filename: filename }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            `Yêu cầu thất bại: ${response.status} ${response.statusText}`
+          );
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Phản hồi từ /summarize:", data);
+        if (data.status === "success") {
+          const messagesDiv = document.getElementById("chat-messages");
+          if (messagesDiv) {
+            messagesDiv.innerHTML = ""; // Xóa tin nhắn cũ
+            addMessage({ content: data.summary, username: "Grok 3" }, true);
+          } else {
+            console.error("Element #chat-messages not found");
+          }
+        } else {
+          addMessage(
+            { content: "Lỗi: " + data.message, username: "Grok 3" },
+            true
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Lỗi khi tóm tắt:", error);
+        addMessage(
+          {
+            content: "Lỗi khi tóm tắt tài liệu: " + error.message,
+            username: "Grok 3",
+          },
+          true
+        );
+      });
+  }
+</script>
+{% endblock %}

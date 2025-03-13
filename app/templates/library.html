@@ -1,0 +1,125 @@
+{% extends "base.html" %} {% block title %}Thư Viện - {{ session.get('username',
+'Guest') }}{% endblock %} {% block extra_styles %}
+<!-- Nhúng Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+/>
+
+<style>
+  /* CSS tùy chỉnh nếu cần */
+  body {
+    background-image: url("https://img.lovepik.com/bg/20240429/Stunning-3D-Render-Mesmerizing-Blue-Books-on-a-Background-of_8464637_wh860.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+  /* Đảm bảo nội dung chính không bị đè bởi sidebar */
+  #main-content {
+    margin-left: 250px; /* Khoảng cách để tránh sidebar */
+    padding: 20px;
+  }
+
+  /* Định dạng box chứa thông báo */
+  .notification-box {
+    max-height: 384px; /* Chiều cao tối đa để có thanh cuộn */
+    overflow-y: auto;
+  }
+</style>
+{% endblock %} {% block content %}
+<div
+  class="flex flex-col items-center justify-center h-[500px] w-[800px] bg-white bg-opacity-30"
+>
+  <div class="flex flex-col items-center justify-center w-full max-w-4xl p-4">
+    <div class="flex justify-between w-full space-x-8">
+      <!-- Cột 1: Các nút chức năng -->
+      <div class="flex flex-col space-y-12 w-1/3 items-center">
+        <button
+          class="bg-blue-500 text-white py-2 px-4 rounded-full w-full h-12"
+          onclick="window.location.href='{{ url_for('auth.favorite_and_downloaded') }}'"
+        >
+          Tải tệp tải về
+        </button>
+        <button
+          class="bg-blue-500 text-white py-2 px-4 rounded-full w-full h-12"
+          onclick="window.location.href='{{ url_for('library.sent_history') }}'"
+        >
+          Tài liệu đã được gửi đi
+        </button>
+        <button
+          class="bg-blue-500 text-white py-2 px-4 rounded-full w-full h-12"
+          onclick="window.location.href='{{ url_for('library.notes') }}'"
+        >
+          Ghi chú
+        </button>
+      </div>
+      <!-- Cột 2: Các nút chức năng -->
+      <div class="flex flex-col space-y-12 w-1/3 items-center">
+        <button
+          class="bg-blue-500 text-white py-2 px-4 rounded-full w-full h-12"
+          onclick="window.location.href='{{ url_for('auth.favorite_and_downloaded') }}'"
+        >
+          Tài liệu yêu thích
+        </button>
+        <button
+          class="bg-blue-500 text-white py-2 px-4 rounded-full w-full h-12"
+          onclick="window.location.href='{{ url_for('library.sent_history') }}'"
+        >
+          Lịch sử xem
+        </button>
+        <button
+          class="bg-blue-500 text-white py-2 px-4 rounded-full w-full h-12"
+          onclick="window.location.href='{{ url_for('library.my_courses') }}'"
+        >
+          Khóa học của tôi
+        </button>
+      </div>
+      <!-- Cột 3: Box thông báo -->
+      <div
+        class="flex flex-col space-y-4 bg-blue-500 p-4 rounded-lg h-96 notification-box w-1/3"
+      >
+        <div class="bg-white text-black p-2 rounded-lg">
+          KHDL_ms00347 (1) tải xuống thành công
+        </div>
+        <div class="bg-white text-black p-2 rounded-lg">
+          KHDL_ms00347 tải xuống thành công
+        </div>
+        <div class="bg-white text-black p-2 rounded-lg">
+          Tài chính ngân hàng_Pham Minh đã gửi đi thành công
+        </div>
+        <div class="bg-white text-black p-2 rounded-lg">
+          HTTT_MS00812 hủy tải xuống
+        </div>
+        <div class="bg-white text-black p-2 rounded-lg">
+          KHDL_ms00347 (1) tải xuống thành công
+        </div>
+        <div class="bg-white text-black p-2 rounded-lg">
+          KHDL_ms00347 tải xuống thành công
+        </div>
+        <div class="bg-white text-black p-2 rounded-lg">
+          Tài chính ngân hàng_Pham Minh đã gửi đi thành công
+        </div>
+        <div class="bg-white text-black p-2 rounded-lg">
+          HTTT_MS00812 hủy tải xuống
+        </div>
+        <div class="bg-white text-black p-2 rounded-lg">
+          KHDL_ms00347 (1) tải xuống thành công
+        </div>
+        <div class="bg-white text-black p-2 rounded-lg">
+          KHDL_ms00347 tải xuống thành công
+        </div>
+        <div class="bg-white text-black p-2 rounded-lg">
+          Tài chính ngân hàng_Pham Minh đã gửi đi thành công
+        </div>
+        <div class="bg-white text-black p-2 rounded-lg">
+          HTTT_MS00812 hủy tải xuống
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block extra_scripts %}
+<!-- Xóa đoạn JavaScript hiển thị alert -->
+{% endblock %}

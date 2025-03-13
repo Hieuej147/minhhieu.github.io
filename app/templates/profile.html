@@ -7,24 +7,20 @@ endblock %} {% block extra_styles %}
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
   body {
-    background-image: url("{{ url_for('static', filename='img/bakroud1.jpg') }}"); /* Đường dẫn đến hình ảnh trong thư mục static */
-    background-size: cover; /* Phủ kín toàn bộ trang */
-    background-position: center; /* Căn giữa hình ảnh */
-    background-repeat: no-repeat; /* Không lặp lại hình ảnh */
-    background-attachment: fixed; /* Hình ảnh cố định khi cuộn */
-    min-height: 100vh; /* Đảm bảo body đủ chiều cao */
+    background-image: url("{{ url_for('static', filename='img/bakroud1.jpg') }}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
   }
   main {
-    margin-left: 256px !important; /* Mặc định khi sidebar mở rộng */
-    margin-right: 256px !important; /* Cân bằng khoảng trống hai bên */
-    width: calc(
-      100% - 512px
-    ) !important; /* Trừ cả margin-left và margin-right */
+    margin-left: 256px !important;
+    margin-right: 256px !important;
+    width: calc(100% - 512px) !important;
     padding: 0 !important;
-    min-height: calc(
-      100vh - 60px
-    ) !important; /* Đảm bảo main đủ chiều cao để đẩy footer */
-    z-index: 0; /* Đẩy main xuống dưới sidebar */
+    min-height: calc(100vh - 60px) !important;
+    z-index: 0;
     transition: margin-left 0.3s, margin-right 0.3s, width 0.3s !important;
   }
   .category-btn {
@@ -34,10 +30,10 @@ endblock %} {% block extra_styles %}
     border-radius: 10px;
     transition: background-color 0.3s;
     text-decoration: none;
-    white-space: nowrap; /* Ngăn nút bị ngắt dòng */
-    max-width: 200px; /* Giới hạn chiều rộng tối đa để tránh kéo dài quá mức */
-    overflow: hidden; /* Ẩn nội dung vượt quá */
-    text-overflow: ellipsis; /* Thêm dấu ... nếu nội dung quá dài */
+    white-space: nowrap;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .category-btn:hover {
     background-color: #2563eb;
@@ -48,7 +44,12 @@ endblock %} {% block extra_styles %}
   }
   .document-item {
     position: relative;
-    margin-bottom: 20px; /* Thêm khoảng cách dưới mỗi box tài liệu */
+    margin-bottom: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Hiệu ứng hover */
+  }
+  .document-item:hover {
+    transform: translateY(-5px); /* Nâng nhẹ box khi hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* Tăng bóng khi hover */
   }
   .add-to-favorite {
     position: absolute;
@@ -64,6 +65,7 @@ endblock %} {% block extra_styles %}
     justify-content: center;
     cursor: pointer;
     font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Thêm bóng cho nút */
   }
   .add-to-favorite:hover {
     background-color: #22c55e;
@@ -74,14 +76,35 @@ endblock %} {% block extra_styles %}
   h3 {
     color: white;
   }
-  /* Thêm khoảng cách giữa các danh mục */
   .categories-section > div.mt-8 {
-    margin-top: 20px; /* Thêm khoảng cách trên mỗi danh mục */
-    padding-top: 10px; /* Thêm padding để tạo khoảng cách với nội dung bên trong */
+    margin-top: 20px;
+    padding-top: 10px;
   }
-  /* Đảm bảo flex container không bị dính khi wrap */
   .flex.justify-center.space-x-4.flex-wrap {
-    gap: 20px; /* Thêm khoảng cách giữa các box tài liệu */
+    gap: 20px;
+  }
+  /* Tùy chỉnh ảnh thumbnail */
+  .document-item img {
+    object-fit: cover;
+    width: 150px;
+    height: 200px;
+    border-radius: 15px; /* Bo góc nhiều hơn */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Thêm bóng nhẹ cho ảnh */
+    transition: transform 0.3s ease; /* Hiệu ứng khi hover */
+  }
+  .document-item img:hover {
+    transform: scale(1.05); /* Phóng to nhẹ khi hover */
+  }
+  /* Tùy chỉnh box tài liệu */
+  .document-item {
+    background-color: #ffffff; /* Đổi nền thành màu trắng để nổi bật */
+    border-radius: 15px; /* Bo góc cho toàn bộ box */
+    padding: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Thêm bóng nhẹ cho box */
+  }
+  .document-item p {
+    margin-top: 8px;
+    color: #333; /* Màu chữ đậm hơn */
   }
 </style>
 {% endblock %} {% block content %}
@@ -148,7 +171,7 @@ endblock %} {% block extra_styles %}
               alt="{{ doc.title }}"
               class="rounded-lg mx-auto"
               height="200"
-              src="https://storage.googleapis.com/a1aa/image/QR9akVZb1hGC2nHaTrLvGUHKubosi4W7tbl8dOvGTHw.jpg"
+              src="{{ url_for('static', filename=doc.thumbnail_path) if doc.thumbnail_path else url_for('static', filename='thumbnails/default_thumbnail.jpg') }}"
               width="150"
             />
             <p class="text-sm mt-2 font-semibold">{{ doc.title }}</p>

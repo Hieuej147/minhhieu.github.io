@@ -1,19 +1,18 @@
-<!-- app/templates/upload_document.html -->
 {% extends "base.html" %} {% block title %}Upload Tài Liệu{% endblock %} {%
 block extra_styles %}
 <style>
   body {
-    background-image: url("{{ url_for("static", filename="img/bakroud1.jpg") }}"); /* Đường dẫn đến hình ảnh trong thư mục static */
-    background-size: cover; /* Phủ kín toàn bộ trang */
-    background-position: center; /* Căn giữa hình ảnh */
-    background-repeat: no-repeat; /* Không lặp lại hình ảnh */
-    background-attachment: fixed; /* Hình ảnh cố định khi cuộn */
-    min-height: 100vh; /* Đảm bảo body đủ chiều cao */
+    background-image: url("{{ url_for('static', filename='img/bakroud1.jpg') }}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
   }
   .upload-container {
-    width: 100%; /* Co giãn theo main */
-    max-width: 600px; /* Giới hạn tối đa, nhưng vẫn co giãn nếu main nhỏ hơn */
-    margin: 0 auto; /* Không cần margin lớn, vì main đã có padding */
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
     padding: 20px;
     background-color: #f0f7ff;
     border-radius: 10px;
@@ -72,7 +71,6 @@ block extra_styles %}
     display: none;
   }
 
-  /* Progress bar */
   .progress-bar {
     display: flex;
     justify-content: space-between;
@@ -161,7 +159,6 @@ block extra_styles %}
     const fileInput = document.getElementById("file-input");
     const fileNameDisplay = document.getElementById("file-name");
 
-    // Xử lý kéo-thả file
     uploadBox.addEventListener("dragover", (event) => {
       event.preventDefault();
       uploadBox.style.backgroundColor = "#d0e4ff";
@@ -183,7 +180,6 @@ block extra_styles %}
       }
     });
 
-    // Xử lý khi chọn file bằng nút "Browse My File"
     fileInput.addEventListener("change", function () {
       if (this.files.length > 0) {
         fileNameDisplay.textContent = `File: ${this.files[0].name}`;
@@ -192,7 +188,6 @@ block extra_styles %}
       }
     });
 
-    // Hàm upload file qua AJAX
     function uploadFile(file) {
       const formData = new FormData();
       formData.append("file", file);
@@ -217,6 +212,10 @@ block extra_styles %}
           const progressSteps = document.querySelectorAll(".progress-bar div");
 
           if (form) {
+            progressSteps[0].classList.remove("active");
+            progressSteps[0].classList.add("done");
+            progressSteps[1].classList.add("active");
+
             form.addEventListener("submit", function (event) {
               event.preventDefault();
               progressSteps[1].classList.remove("active");
@@ -232,6 +231,7 @@ block extra_styles %}
         .catch((error) => {
           console.error("Error uploading file:", error);
           alert("Upload thất bại! Vui lòng thử lại.");
+          fileNameDisplay.style.display = "none"; // Ẩn tên file nếu upload thất bại
         });
     }
   });

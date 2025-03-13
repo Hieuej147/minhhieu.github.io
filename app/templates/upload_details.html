@@ -1,4 +1,3 @@
-<!-- app/templates/upload_details.html -->
 {% extends "base.html" %}
 
 {% block title %}Upload Tài Liệu - Details{% endblock %}
@@ -6,22 +5,24 @@
 {% block extra_styles %}
 <style>
   .upload-container {
-    width: 100%; /* Co giãn theo main */
-    max-width: 600px; /* Giới hạn tối đa, nhưng vẫn co giãn nếu main nhỏ hơn */
-    margin: 0 auto; /* Không cần margin lớn, vì main đã có padding */
-    padding: 20px;
-    background-color: #f0f7ff;
-    border-radius: 10px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 15px;
     text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     position: relative;
+    margin-top: 20px;
   }
 
   /* Progress bar */
   .progress-bar {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 30px;
+    align-items: center;
+    margin-bottom: 40px;
     position: relative;
   }
 
@@ -29,36 +30,26 @@
     flex: 1;
     text-align: center;
     font-size: 16px;
-    color: #666;
+    font-weight: 500;
+    color: #999;
     position: relative;
-  }
-
-  .progress-bar div.active {
-    color: #007bff;
-  }
-
-  .progress-bar div.done {
-    color: #28a745;
+    z-index: 1;
   }
 
   .progress-bar div::before {
     content: '';
     position: absolute;
     top: 50%;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background-color: #ddd;
+    left: -50%;
+    width: 100%;
+    height: 4px;
+    background-color: #e0e0e0;
     z-index: -1;
     transition: background-color 0.5s ease;
   }
 
   .progress-bar div:first-child::before {
-    left: 50%;
-  }
-
-  .progress-bar div:last-child::before {
-    right: 50%;
+    display: none;
   }
 
   .progress-bar div.active::before {
@@ -69,36 +60,107 @@
     background-color: #28a745;
   }
 
+  .progress-bar div span {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+    color: #fff;
+    margin-bottom: 8px;
+    transition: background-color 0.5s ease;
+  }
+
+  .progress-bar div.active span {
+    background-color: #007bff;
+  }
+
+  .progress-bar div.done span {
+    background-color: #28a745;
+  }
+
   /* Form styles */
   .details-form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 25px;
     margin-top: 20px;
   }
 
   .details-form input,
   .details-form select {
-    padding: 10px;
+    padding: 15px 20px; /* Tăng padding để lớn hơn */
     border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
+    border-radius: 10px; /* Bo góc nhiều hơn */
+    font-size: 18px; /* Tăng font size */
+    line-height: 1.5; /* Tăng chiều cao dòng để dễ đọc */
     width: 100%;
     box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .details-form input:focus,
+  .details-form select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    outline: none;
   }
 
   .details-form button {
-    padding: 10px 20px;
+    padding: 15px 40px; /* Tăng kích thước nút */
     background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px; /* Tăng font size */
+    font-weight: 500;
+    transition: background-color 0.3s ease, transform 0.1s ease;
   }
 
   .details-form button:hover {
     background-color: #0056b3;
+    transform: translateY(-2px);
+  }
+
+  .details-form button:active {
+    transform: translateY(0);
+  }
+
+  /* Label cho các trường */
+  .details-form label {
+    font-size: 16px; /* Tăng font size của label */
+    font-weight: 500;
+    color: #333;
+    text-align: left;
+    margin-bottom: 8px;
+  }
+
+  .details-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .upload-container {
+      padding: 20px;
+      max-width: 90%;
+    }
+    .details-form input,
+    .details-form select {
+      padding: 12px 15px;
+      font-size: 16px;
+    }
+    .details-form button {
+      padding: 12px 30px;
+      font-size: 16px;
+    }
+    .details-form label {
+      font-size: 14px;
+    }
   }
 </style>
 {% endblock %}
@@ -107,27 +169,34 @@
 <div class="upload-container">
   <!-- Progress bar -->
   <div class="progress-bar">
-    <div class="done">1. Upload</div>
-    <div class="active">2. Details</div>
-    <div>3. Done</div>
+    <div class="done"><span>1</span><br>Upload</div>
+    <div class="active"><span>2</span><br>Details</div>
+    <div><span>3</span><br>Done</div>
   </div>
 
   <!-- Form nhập thông tin chi tiết -->
   <form class="details-form" method="POST" action="{{ url_for('document.upload_document_details') }}">
     <input type="hidden" name="temp_file_path" value="{{ temp_file_path }}" />
     <input type="hidden" name="file_type" value="{{ file_type }}" />
-    <input type="hidden" name="temp_thumbnail_path" value="{{ temp_thumbnail_path if temp_thumbnail_path else '' }}" />
-    <input type="text" name="title" placeholder="Tiêu đề" value="{{ title if title else '' }}" required />
-    <select name="category" required>
-      <option value="">Chọn danh mục</option>
-      <option value="Công nghệ" {% if category == 'Công nghệ' %}selected{% endif %}>Công nghệ</option>
-      <option value="Khoa học" {% if category == 'Khoa học' %}selected{% endif %}>Khoa học</option>
-      <option value="Kinh tế" {% if category == 'Kinh tế' %}selected{% endif %}>Kinh tế</option>
-      <option value="Văn học" {% if category == 'Văn học' %}selected{% endif %}>Văn học</option>
-      <!-- Thêm các danh mục khác nếu cần -->
-    </select>
-    <input type="number" name="pages" placeholder="Số trang" value="{{ pages if pages else '' }}" required />
-    <button type="submit">Done</button>
+    <div class="form-group">
+      <label for="title">Tiêu đề</label>
+      <input type="text" id="title" name="title" placeholder="Nhập tiêu đề" value="{{ title if title else '' }}" required />
+    </div>
+    <div class="form-group">
+      <label for="category">Danh mục</label>
+      <select id="category" name="category" required>
+        <option value="">Chọn danh mục</option>
+        <option value="Công nghệ" {% if category == 'Công nghệ' %}selected{% endif %}>Công nghệ</option>
+        <option value="Khoa học" {% if category == 'Khoa học' %}selected{% endif %}>Khoa học</option>
+        <option value="Kinh tế" {% if category == 'Kinh tế' %}selected{% endif %}>Kinh tế</option>
+        <option value="Văn học" {% if category == 'Văn học' %}selected{% endif %}>Văn học</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="pages">Số trang</label>
+      <input type="number" id="pages" name="pages" placeholder="Nhập số trang" value="{{ pages if pages else '' }}" required />
+    </div>
+    <button type="submit">Hoàn tất</button>
   </form>
 </div>
 {% endblock %}
@@ -145,7 +214,7 @@
       progressSteps[1].classList.add("active");
     }, 500);
 
-    // Khi bấm Done
+    // Khi bấm Hoàn tất
     form.addEventListener("submit", function (event) {
       event.preventDefault();
       progressSteps[1].classList.remove("active");

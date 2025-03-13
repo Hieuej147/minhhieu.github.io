@@ -6,7 +6,7 @@ chat = Blueprint('chat', __name__, url_prefix='/chat')
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
-    api_key="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",
+    api_key="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",
 )
 
 @chat.route('/')

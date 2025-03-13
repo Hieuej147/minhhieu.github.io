@@ -1,10 +1,10 @@
-#app/routes/document.py
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from app import db
 from app.models.user import User
 from app.models.document import Document
 import os
 import shutil
+import random  # Thêm import random để chọn ảnh ngẫu nhiên
 from werkzeug.utils import secure_filename
 from app.models.downloaded_document import DownloadedDocument
 
@@ -92,7 +92,15 @@ def upload_document_details():
 
     shutil.move(os.path.join('app', 'static', temp_file_path), saved_file_path)
 
-    thumbnail_path = None
+    # Random ảnh thumbnail từ thư mục app/static/thumbnails/
+    thumbnail_dir = os.path.join('app', 'static', 'thumbnails')
+    thumbnail_images = [f for f in os.listdir(thumbnail_dir) if f.endswith(('.jpg', '.jpeg', '.png'))] if os.path.exists(thumbnail_dir) else []
+    if thumbnail_images:
+        random_thumbnail = random.choice(thumbnail_images)
+        thumbnail_path = f"thumbnails/{random_thumbnail}"  # Đường dẫn tương đối để lưu vào database
+    else:
+        # Nếu không có ảnh, dùng ảnh mặc định
+        thumbnail_path = "thumbnails/default_thumbnail.jpg"
 
     document = Document(
         title=title,
